@@ -28,6 +28,7 @@ public class Main {
 		// Modules.add(new Module("CS1234", 3, 7));
 		// Modules.add(new Module("CS4321", 2, 4));
 		// Modules.add(new Module("CS1111", 5, 7));
+		//comment
 
 		String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
 		BufferedReader br = null;
