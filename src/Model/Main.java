@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 
 import com.google.ortools.constraintsolver.Solver;
 
@@ -16,7 +17,7 @@ public class Main {
 
 	public static ArrayList<Module> Modules = new ArrayList<Module>();
 	public static ArrayList<Programme> cohort_Data = new ArrayList<Programme>();
-	public static ArrayList<Programme> programme_Data = new ArrayList<Programme>();
+	// public static String[][] programme_Data = new String[100][1];
 
 	public Main() {
 
@@ -25,10 +26,6 @@ public class Main {
 	public static void addModules() {
 
 		Modules.add(new Module(null, 0, 0));
-		// Modules.add(new Module("CS1234", 3, 7));
-		// Modules.add(new Module("CS4321", 2, 4));
-		// Modules.add(new Module("CS1111", 5, 7));
-		//comment
 
 		String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
 		BufferedReader br = null;
@@ -70,23 +67,57 @@ public class Main {
 
 	public static void addCohort() throws IOException {
 
-		// programme_data = import_programme_data('somewhere_else.csv');
-		// {modules:['CS1240','CS1260']}
+		int cohortLength = 0;
+		int moduleLength = 0;
 
 		String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Cohort.cvs";
 		BufferedReader br = null;
 		String line = "";
+		String line2 = " ";
 		String cvsSplitBy = ",";
+		String[] CohortLine;
+		String[] arraySplit = new String[100];
 
 		try {
 
 			br = new BufferedReader(new FileReader(csvFile));
+
 			while ((line = br.readLine()) != null) {
 
-				// use comma as separator
-				String[] Cohort = line.split(cvsSplitBy);
+				cohortLength++;
 
-				System.out.println("Modules:" + Arrays.toString(Cohort));
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+
+		String[][] programme_Data = new String[cohortLength][];
+		int count = 0;
+
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+
+			while ((line = br.readLine()) != null) {
+
+				CohortLine = line.split(line2);
+				arraySplit = CohortLine[0].split(cvsSplitBy);
+				moduleLength = CohortLine[0].split(cvsSplitBy).length;
+
+				programme_Data[count] = new String[moduleLength];
+				int cohortCount = 1;
+
+				while (cohortCount <= moduleLength) {
+
+					programme_Data[count][cohortCount - 1] = arraySplit[cohortCount - 1];
+
+					cohortCount++;
+
+				}
+
+				count++;
 
 			}
 
@@ -104,7 +135,8 @@ public class Main {
 			}
 		}
 
-		System.out.println("");
+
+		System.out.println(Arrays.deepToString(programme_Data));
 
 	}
 
