@@ -17,13 +17,13 @@ public class Main {
 
 	public static ArrayList<Module> Modules = new ArrayList<Module>();
 	public static ArrayList<Programme> cohort_Data = new ArrayList<Programme>();
-	// public static String[][] programme_Data = new String[100][1];
+	public static String[][] programme_Data;
 
 	public Main() {
 
 	}
 
-	public static void addModules() {
+	public static void importModules() {
 
 		Modules.add(new Module(null, 0, 0));
 
@@ -31,19 +31,21 @@ public class Main {
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
-
+		int i = 0;
 		try {
 
 			br = new BufferedReader(new FileReader(csvFile));
 			while ((line = br.readLine()) != null) {
 
 				// use comma as separator
-				String[] Module = line.split(cvsSplitBy);
+				String[] moduleArray = line.split(cvsSplitBy);
 
-				Modules.add(new Module(Module[0], Integer.parseInt(Module[1]), Integer.parseInt(Module[2])));
-
-				System.out.println("Module [code= " + Module[0] + " , Intro Hours= " + Module[1] + " , Total Hours= "
-						+ Module[2] + "]");
+				Modules.add(
+						new Module(moduleArray[0], Integer.parseInt(moduleArray[1]), Integer.parseInt(moduleArray[2])));
+				System.out.println(Modules.get(i));
+				// System.out.println("Module [code= " + moduleArray[0] + " ,
+				// Intro Hours= " + moduleArray[1] + " , Total Hours= " +
+				// moduleArray[2] + "]");
 
 			}
 
@@ -65,7 +67,7 @@ public class Main {
 
 	}
 
-	public static void addCohort() throws IOException {
+	public static void importCohort() throws IOException {
 
 		int cohortLength = 0;
 		int moduleLength = 0;
@@ -91,7 +93,6 @@ public class Main {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
 
 		String[][] programme_Data = new String[cohortLength][];
 		int count = 0;
@@ -135,31 +136,37 @@ public class Main {
 			}
 		}
 
-
 		System.out.println(Arrays.deepToString(programme_Data));
+		System.out.println(programme_Data.length);
+		System.out.println("");
 
 	}
 
-	public void Programs() {
+	public static void makeProgramme() throws IOException {
+		
+
+		importModules();
+		importCohort();
+		
+		System.out.println("The number of elements is : " + programme_Data == null ? 0 : programme_Data.length);
+		System.out.println("The number of elements is : " + Modules == null ? 0 : Modules.size());
 
 		Programme programme = new Programme(null, 0, 0);
 
-		for (int p = 1; p < Modules.size(); p++) {
+		for (int i = 0; i < programme_Data.length; i++) {
+			for (int j = 0; j < programme_Data.length; j++) {
+				for (int x = 0; x < Modules.size(); x++) {
+					if (programme_Data[i][j].equals(Modules.get(x))) {
+						
+						programme.addModule(Modules.get(i));
 
-			// if (Modules.[0] == programme_Data[0]){
-			//
-			// programme_Data.add(new Module(Modules.[0],
-			// Integer.parseInt(Module[1]), Integer.parseInt(Module[2]));
-			//
-			// }
-
+						System.out.println("Match found");
+					} else {
+						System.out.println("Not found");
+					}
+				}
+			}
 		}
-
-		// var programme = new Programme(programme_data);
-		// for(module in modules)
-		// if(module.code is in programme_data.modules)
-		// programme.add_module(module);
-
 	}
 
 	public static void solve() {
@@ -192,9 +199,11 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
-
-		addModules();
-		addCohort();
+		
+		//importModules();
+		//importCohort();
+		makeProgramme();
+		
 	}
 
 }

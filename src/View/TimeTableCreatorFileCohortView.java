@@ -87,21 +87,20 @@ public class TimeTableCreatorFileCohortView {
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
-		
+
 		String userhome = System.getProperty("user.home");
-		JFileChooser ModulefileChooser = new JFileChooser(userhome +"\\Documets");
-	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-	        "Text Files", "txt", "cvs");
-	    ModulefileChooser.setFileFilter(filter);
-		ModulefileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-	    Component parent = null;
-		int returnVal = ModulefileChooser.showOpenDialog(parent);
-	    if(returnVal == JFileChooser.APPROVE_OPTION) {
-	       System.out.println("You chose to open this file: " +
-	    		   ModulefileChooser.getSelectedFile().getName());
-	       CohortPath =  ModulefileChooser.getSelectedFile().getAbsolutePath().toString();
-	       System.out.println(CohortPath);
-	    }	
+		JFileChooser CohortfileChooser = new JFileChooser(userhome + "\\Documets");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "cvs");
+		CohortfileChooser.setFileFilter(filter);
+		CohortfileChooser.setAcceptAllFileFilterUsed(false);
+		CohortfileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		Component parent = null;
+		int returnVal = CohortfileChooser.showOpenDialog(parent);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			System.out.println("You chose to open this file: " + CohortfileChooser.getSelectedFile().getName());
+			CohortPath = CohortfileChooser.getSelectedFile().getAbsolutePath().toString();
+			System.out.println(CohortPath);
+		}
 
 		// setting the layout of the main frame to a border layout
 
@@ -154,7 +153,7 @@ public class TimeTableCreatorFileCohortView {
 			commandBox.add(genButton, gbc);
 
 			gbc.gridwidth = gbc.REMAINDER;
-			center.add(ModulefileChooser, gbc);
+			center.add(CohortfileChooser, gbc);
 
 			JPanel titleBox = new JPanel();
 			titleBox.setOpaque(false);
@@ -184,23 +183,32 @@ public class TimeTableCreatorFileCohortView {
 				MainFrame.mainFrame.repaint();
 				MainFrame.mainFrame.revalidate();
 				CohortPath = null;
+				TimeTableCreatorFileModuleView.ModulePath = null;
 
 			}
 		});
 
 		genButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (CohortPath != null) {
 
-				MainFrame.mainFrame.getContentPane().removeAll();
-				TimeTableCreatorTableView gov = new TimeTableCreatorTableView();
-				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
-				MainFrame.mainFrame.repaint();
-				MainFrame.mainFrame.revalidate();
+					MainFrame.mainFrame.getContentPane().removeAll();
+					TimeTableCreatorTableView gov = new TimeTableCreatorTableView();
+					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+					MainFrame.mainFrame.repaint();
+					MainFrame.mainFrame.revalidate();
+
+				} else {
+
+					JOptionPane.showMessageDialog(mainPanel, "Please select a file for cohort data!", "Attention!",
+							JOptionPane.WARNING_MESSAGE);
+
+				}
 
 			}
 		});
 		return mainPanel;
-		
+
 	}
 
 	/**

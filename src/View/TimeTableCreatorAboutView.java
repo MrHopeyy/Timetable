@@ -53,8 +53,8 @@ public class TimeTableCreatorAboutView {
 	private JTextArea jTextArea1;
 	private JPanel mainPanel;
 
-	/*
-	 * constructor for the menuView
+	/**
+	 * Repaints the MainFrame to create an about view
 	 */
 	public TimeTableCreatorAboutView() {
 
@@ -65,7 +65,7 @@ public class TimeTableCreatorAboutView {
 	 */
 	public JPanel buildTimeTableCreatorMenu() {
 
-		final int blankSpace = 6; // blank at edge of panels
+		final int blankSpace = 6;
 
 		try {
 			mainPanel = (JPanel) createContent();
@@ -75,22 +75,33 @@ public class TimeTableCreatorAboutView {
 			e1.printStackTrace();
 		}
 
+		/**
+		 * Creating the Panel
+		 */
 		mainPanel.setVisible(true);
 		mainPanel.setSize(720, 480);
 		mainPanel.setLayout(new BorderLayout());
 
-		// creating all of the buttons for the menu
+		/**
+		 * Creating the BackButton
+		 */
 		JButton backButton = new JButton();
 
+		/**
+		 * Creating the main heading label
+		 */
 		JLabel label1 = new JLabel("About");
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
+		/**
+		 * Creating a jtext area to hold the text paragraph
+		 */
+
 		jTextArea1 = new JTextArea("This tool is an application that i have created for my final year project. "
-				+ System.lineSeparator() 
-				+ "This tool is for the perpose of creating timetabbles for universitys." + System.lineSeparator()
-				+ System.lineSeparator()
+				+ System.lineSeparator() + "This tool is for the perpose of creating timetabbles for universitys."
+				+ System.lineSeparator() + System.lineSeparator()
 				+ "It uses constraint based programming to sort the modlues into feasable and optimal time slots."
 				+ System.lineSeparator() + System.lineSeparator() + "Created by Alex Hope");
 
@@ -101,6 +112,7 @@ public class TimeTableCreatorAboutView {
 		jTextArea1.setWrapStyleWord(true);
 		jTextArea1.setOpaque(false);
 
+		// Creating a JScroller to contain the textarea
 		JScrollPane listScroller = new JScrollPane(jTextArea1);
 		listScroller.setPreferredSize(new Dimension(600, 200));
 		listScroller.setMinimumSize(new Dimension(600, 200));
@@ -111,29 +123,31 @@ public class TimeTableCreatorAboutView {
 
 		try {
 
-			// creating a new panel center and setting the properties
+			/**
+			 * Creating a panel called centre to be added centre in the box
+			 * layout.
+			 */
 			JPanel center = new JPanel();
 			GridBagLayout thisLayout = new GridBagLayout();
 			center.setLayout(thisLayout);
 			center.setSize(720, 480);
 			center.setOpaque(false);
 
-			// creating a new gridbag layout for all of the buttons and adding
-			// them
+			/**
+			 * Gridbag used to add the components vertically
+			 */
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.insets = new Insets(8, 8, 8, 8);
 			gbc.gridwidth = gbc.REMAINDER;
-
 			Border thickBorder = new LineBorder(Color.BLACK, 4);
+
 			/**
-			 * creating the buttons for the panel
+			 * creating all of the buttons for the panel
 			 */
 			{
 				backButton = new JButton();
 				backButton.setForeground(Color.BLACK);
 				backButton.setPreferredSize(new Dimension(250, 50));
-				// ExitButton.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				backButton.setText("Back to Menu");
 				backButton.setFont(new Font("Arial", Font.BOLD, 24));
 				backButton.setHorizontalTextPosition(JButton.CENTER);
@@ -155,7 +169,6 @@ public class TimeTableCreatorAboutView {
 			mainPanel.add(titleBox, BorderLayout.NORTH);
 
 			center.add(listScroller, gbc);
-
 			commandBox.setOpaque(false);
 			center.setOpaque(false);
 			jTextArea1.setOpaque(false);
@@ -167,7 +180,8 @@ public class TimeTableCreatorAboutView {
 		}
 
 		/**
-		 * used to create an action listener to see if the user wants to quit.
+		 * Creating action listeners to perform an action when button is
+		 * pressed.
 		 */
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -186,7 +200,7 @@ public class TimeTableCreatorAboutView {
 	}
 
 	/**
-	 * used to create the background image for the panel
+	 * Creating a component to add the background image for the panel
 	 */
 	private Component createContent() throws IOException {
 		final ImageIcon icon = new ImageIcon(this.getClass().getResource("/Files/background.jpg"));

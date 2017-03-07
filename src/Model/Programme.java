@@ -17,7 +17,7 @@ public class Programme {
 		IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
 	}
 
-	public void addModule(Module Modules) {
+	public void addModule(Module module) {
 
 		// function add_module(module){
 		// module_codes.push(module.code);

@@ -113,18 +113,17 @@ public class TimeTableCreatorTableView {
 				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
 				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" } };
 
-		
 		JTable mainTable = new JTable(rowData, columnNames);
-		mainTable.setEnabled(false);		
+		mainTable.setEnabled(false);
 		JScrollPane scrollPane = new JScrollPane(mainTable);
-		JTable rowTable = new RowNumberTable(mainTable);	
+		JTable rowTable = new RowNumberTable(mainTable);
 		rowTable.setOpaque(false);
 		scrollPane.setRowHeaderView(rowTable);
 		scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
 		scrollPane.setEnabled(false);
-		//scrollPane.setOpaque(false);
-		//scrollPane.getViewport().setOpaque(false);
-		
+		// scrollPane.setOpaque(false);
+		// scrollPane.getViewport().setOpaque(false);
+
 		// setting the layout of the main frame to a border layout
 
 		try {
@@ -202,6 +201,8 @@ public class TimeTableCreatorTableView {
 				MainFrame.mainFrame.add(x.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
 				MainFrame.mainFrame.repaint();
 				MainFrame.mainFrame.revalidate();
+				TimeTableCreatorFileCohortView.CohortPath = null;
+				TimeTableCreatorFileModuleView.ModulePath = null;
 
 			}
 		});

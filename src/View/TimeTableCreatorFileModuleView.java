@@ -92,6 +92,7 @@ public class TimeTableCreatorFileModuleView {
 		JFileChooser ModulefileChooser = new JFileChooser(userhome + "\\Documets");
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "cvs");
 		ModulefileChooser.setFileFilter(filter);
+		ModulefileChooser.setAcceptAllFileFilterUsed(false);
 		ModulefileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		Component parent = null;
 		int returnVal = ModulefileChooser.showOpenDialog(parent);
@@ -102,7 +103,7 @@ public class TimeTableCreatorFileModuleView {
 		}
 
 		ModulefileChooser.setOpaque(false);
-		//((JScrollPane) ModulefileChooser).getViewport().setOpaque(false);
+		// ((JScrollPane) ModulefileChooser).getViewport().setOpaque(false);
 
 		// setting the layout of the main frame to a border layout
 
@@ -115,8 +116,7 @@ public class TimeTableCreatorFileModuleView {
 			center.setSize(720, 480);
 			center.setOpaque(false);
 
-			// creating a new gridbag layout for all of the buttons and adding
-			// them
+			// creating a new gridbag layout for all of the buttons and adding them
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.insets = new Insets(8, 8, 8, 8);
 			// gbc.gridwidth = gbc.REMAINDER;
@@ -129,8 +129,6 @@ public class TimeTableCreatorFileModuleView {
 				backButton = new JButton();
 				backButton.setForeground(Color.BLACK);
 				backButton.setPreferredSize(new Dimension(125, 50));
-				// ExitButton.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				backButton.setText("Back");
 				backButton.setFont(new Font("Arial", Font.BOLD, 24));
 				backButton.setHorizontalTextPosition(JButton.CENTER);
@@ -140,8 +138,6 @@ public class TimeTableCreatorFileModuleView {
 				genButton = new JButton();
 				genButton.setForeground(Color.BLACK);
 				genButton.setPreferredSize(new Dimension(125, 50));
-				// ExitButton.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				genButton.setText("Next");
 				genButton.setFont(new Font("Arial", Font.BOLD, 24));
 				genButton.setHorizontalTextPosition(JButton.CENTER);
@@ -191,12 +187,20 @@ public class TimeTableCreatorFileModuleView {
 
 		genButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (ModulePath != null) {
 
-				MainFrame.mainFrame.getContentPane().removeAll();
-				TimeTableCreatorFileCohortView gov = new TimeTableCreatorFileCohortView();
-				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
-				MainFrame.mainFrame.repaint();
-				MainFrame.mainFrame.revalidate();
+					MainFrame.mainFrame.getContentPane().removeAll();
+					TimeTableCreatorFileCohortView gov = new TimeTableCreatorFileCohortView();
+					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+					MainFrame.mainFrame.repaint();
+					MainFrame.mainFrame.revalidate();
+
+				} else {
+
+					JOptionPane.showMessageDialog(mainPanel, "Please select a file for module data!", "Attention!",
+							JOptionPane.WARNING_MESSAGE);
+
+				}
 
 			}
 		});
