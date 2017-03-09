@@ -17,7 +17,7 @@ public class Module {
 
 	public static int N_HOURS = 10;
 	public static int N_DAYS = 5;
-	public static String Module_Code;
+	public String Module_Code;
 	public static int introHours;
 	public static int totalHours;
 	public static IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
@@ -25,8 +25,8 @@ public class Module {
 
 	public static Solver solver = new Solver("Module");
 
-	public Module(String Module_Code, int introHours, int totalHours) {
-
+	public Module(Solver solver,String Module_Code, int introHours, int totalHours) {
+		this.Module_Code = Module_Code;
 		// Timetable Flatten is a 1d array of timetable.
 		IntVar[] timetable_Flatten = solver.makeBoolVarArray(N_DAYS * N_HOURS);
 
@@ -69,7 +69,7 @@ public class Module {
 	}
 
 	// setter for the module code of a module
-	private static String getModuleCode(String Module_Code) {
+	public String getModuleCode() {
 
 		return Module_Code;
 

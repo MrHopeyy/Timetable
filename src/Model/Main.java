@@ -13,39 +13,43 @@ import java.lang.reflect.Array;
 
 import com.google.ortools.constraintsolver.Solver;
 
+import View.TimeTableCreatorFileCohortView;
+import View.TimeTableCreatorFileModuleView;
+
 public class Main {
 
-	public static ArrayList<Module> Modules = new ArrayList<Module>();
 	public static ArrayList<Programme> cohort_Data = new ArrayList<Programme>();
-	public static String[][] programme_Data;
+	
+	public static String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Cohort.cvs";
+	public static String csvFile2 = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
+	//public static String csvFile = TimeTableCreatorFileModuleView.ModulePath;
+	//public static String csvFile2 = TimeTableCreatorFileCohortView.CohortPath;
+	public static BufferedReader br = null;
+	public static String line = "";
+	public static String line2 = " ";
+	public static String cvsSplitBy = ",";
+	public static String[] CohortLine;
+	public static String[] arraySplit = new String[100];
 
 	public Main() {
 
 	}
 
-	public static void importModules() {
+	public static ArrayList<Module> importModules(Solver solver) {
 
-		Modules.add(new Module(null, 0, 0));
-
-		String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
-		BufferedReader br = null;
-		String line = "";
-		String cvsSplitBy = ",";
+		
+		ArrayList<Module> modules = new ArrayList<Module>();
 		int i = 0;
 		try {
 
-			br = new BufferedReader(new FileReader(csvFile));
+			br = new BufferedReader(new FileReader(csvFile2));
 			while ((line = br.readLine()) != null) {
-
-				// use comma as separator
+				
 				String[] moduleArray = line.split(cvsSplitBy);
 
-				Modules.add(
-						new Module(moduleArray[0], Integer.parseInt(moduleArray[1]), Integer.parseInt(moduleArray[2])));
-				System.out.println(Modules.get(i));
-				// System.out.println("Module [code= " + moduleArray[0] + " ,
-				// Intro Hours= " + moduleArray[1] + " , Total Hours= " +
-				// moduleArray[2] + "]");
+				modules.add(
+						new Module(solver,moduleArray[0], Integer.parseInt(moduleArray[1]), Integer.parseInt(moduleArray[2])));
+				System.out.println(modules.get(i));
 
 			}
 
@@ -64,21 +68,15 @@ public class Main {
 		}
 
 		System.out.println("");
-
+		return modules;
 	}
 
-	public static void importCohort() throws IOException {
+	public static String[][] importCohort() throws IOException {
+		
+		 String[][] programme_Data;
 
 		int cohortLength = 0;
 		int moduleLength = 0;
-
-		String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Cohort.cvs";
-		BufferedReader br = null;
-		String line = "";
-		String line2 = " ";
-		String cvsSplitBy = ",";
-		String[] CohortLine;
-		String[] arraySplit = new String[100];
 
 		try {
 
@@ -94,7 +92,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		String[][] programme_Data = new String[cohortLength][];
+		programme_Data = new String[cohortLength][];
 		int count = 0;
 
 		try {
@@ -137,28 +135,25 @@ public class Main {
 		}
 
 		System.out.println(Arrays.deepToString(programme_Data));
-		System.out.println(programme_Data.length);
 		System.out.println("");
+		return programme_Data;
 
 	}
 
-	public static void makeProgramme() throws IOException {
+	public static Programme makeProgramme(Solver solver, ArrayList<Module> modules, String[][] programme_Data) throws IOException {
 		
-
-		importModules();
-		importCohort();
-		
+		System.out.println(programme_Data);
 		System.out.println("The number of elements is : " + programme_Data == null ? 0 : programme_Data.length);
 		System.out.println("The number of elements is : " + Modules == null ? 0 : Modules.size());
 
 		Programme programme = new Programme(null, 0, 0);
 
 		for (int i = 0; i < programme_Data.length; i++) {
-			for (int j = 0; j < programme_Data.length; j++) {
+			for (int j = 0; j < programme_Data[0].length; j++) {
 				for (int x = 0; x < Modules.size(); x++) {
-					if (programme_Data[i][j].equals(Modules.get(x))) {
-						
-						programme.addModule(Modules.get(i));
+					if (programme_Data[i][j].equals(Modules.get(x).getModuleCode(csvFile))) {
+
+						programme.addModule(Modules.get(x));
 
 						System.out.println("Match found");
 					} else {
@@ -173,8 +168,7 @@ public class Main {
 
 		Solver solver = new Solver("Main");
 
-		// solver.add(Constraint* MakeIsEqualCstCt(IntExpr* const v, int64 c,
-		// IntVar* const b));
+		// solver.add(Constraint* MakeIsEqualCstCt(IntExpr* const v, int64 c, IntVar* const b));
 
 		// DecisionBuilder db = solver.makePhase(timetable_Flatten,
 		// Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
@@ -199,11 +193,12 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
-		
-		//importModules();
-		//importCohort();
-		makeProgramme();
-		
+
+		Solver solver = new Solver("Timetable");
+		ArrayList<Module> modules = importModules(solver);
+		String[][] programme_data = importCohort();
+		Programme programme = makeProgramme(solver,modules,programme_data);
+
 	}
 
 }

@@ -18,14 +18,19 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
@@ -60,6 +65,7 @@ import Model.Module;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -70,12 +76,15 @@ import javax.swing.table.*;
 public class TimeTableCreatorTableView {
 
 	private JPanel mainPanel;
+	
 
 	/*
 	 * constructor for the menuView
 	 */
 	public TimeTableCreatorTableView() {
-
+		
+		
+		
 	}
 
 	/**
@@ -149,8 +158,6 @@ public class TimeTableCreatorTableView {
 				backButton = new JButton();
 				backButton.setForeground(Color.BLACK);
 				backButton.setPreferredSize(new Dimension(125, 50));
-				// ExitButton.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				backButton.setText("Back to Menu");
 				backButton.setFont(new Font("Arial", Font.BOLD, 12));
 				backButton.setHorizontalTextPosition(JButton.CENTER);
@@ -160,8 +167,6 @@ public class TimeTableCreatorTableView {
 				printButton = new JButton();
 				printButton.setForeground(Color.BLACK);
 				printButton.setPreferredSize(new Dimension(125, 50));
-				// ExitButton.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				printButton.setText("Print Table");
 				printButton.setFont(new Font("Arial", Font.BOLD, 12));
 				printButton.setHorizontalTextPosition(JButton.CENTER);
@@ -209,7 +214,54 @@ public class TimeTableCreatorTableView {
 
 		printButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+				Date dateobj = new Date();
+				
+				File file = new File("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".txt");
 
+			    if (!file.exists()) {
+			        try {
+						file.createNewFile();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			    }
+
+				StringBuilder builder = new StringBuilder();
+				for(int i = 0; i < rowData.length; i++)
+				{
+				   for(int j = 0; j < rowData[i].length; j++)
+				   {
+				      builder.append(rowData[i][j]+"");
+				      if(j < rowData[i].length - 1)
+				         builder.append(" ");
+				   }
+				   builder.append("\n");
+				}
+				BufferedWriter writer = null;
+				try {
+					
+					writer = new BufferedWriter(new FileWriter("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".txt"));
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					writer.write(builder.toString());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}//save the string representation of the board
+				try {
+					writer.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 
 		});

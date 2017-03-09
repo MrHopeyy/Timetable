@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -82,25 +83,19 @@ public class TimeTableCreatorFileCohortView {
 		// creating all of the buttons for the menu
 		JButton backButton = new JButton();
 		JButton genButton = new JButton();
+		JButton openButton = new JButton();
+
+		JTextArea textArea = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		textArea.setEditable(false);
+
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setPreferredSize(new Dimension(250, 250));
 
 		JLabel label1 = new JLabel("Select Cohort File");
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
-
-		String userhome = System.getProperty("user.home");
-		JFileChooser CohortfileChooser = new JFileChooser(userhome + "\\Documets");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "cvs");
-		CohortfileChooser.setFileFilter(filter);
-		CohortfileChooser.setAcceptAllFileFilterUsed(false);
-		CohortfileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		Component parent = null;
-		int returnVal = CohortfileChooser.showOpenDialog(parent);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			System.out.println("You chose to open this file: " + CohortfileChooser.getSelectedFile().getName());
-			CohortPath = CohortfileChooser.getSelectedFile().getAbsolutePath().toString();
-			System.out.println(CohortPath);
-		}
 
 		// setting the layout of the main frame to a border layout
 
@@ -145,6 +140,16 @@ public class TimeTableCreatorFileCohortView {
 				genButton.setHorizontalTextPosition(JButton.CENTER);
 				genButton.setVerticalTextPosition(JButton.CENTER);
 			}
+			
+			{
+				openButton = new JButton();
+				openButton.setForeground(Color.BLACK);
+				openButton.setPreferredSize(new Dimension(125, 50));
+				openButton.setText("Open File");
+				openButton.setFont(new Font("Arial", Font.BOLD, 24));
+				openButton.setHorizontalTextPosition(JButton.CENTER);
+				openButton.setVerticalTextPosition(JButton.CENTER);
+			}
 
 			JPanel commandBox = new JPanel();
 			commandBox.setOpaque(false);
@@ -153,7 +158,9 @@ public class TimeTableCreatorFileCohortView {
 			commandBox.add(genButton, gbc);
 
 			gbc.gridwidth = gbc.REMAINDER;
-			center.add(CohortfileChooser, gbc);
+		//	center.add(CohortfileChooser, gbc);
+			center.add(scrollPane, gbc);
+			center.add(openButton, gbc);
 
 			JPanel titleBox = new JPanel();
 			titleBox.setOpaque(false);
@@ -207,10 +214,47 @@ public class TimeTableCreatorFileCohortView {
 
 			}
 		});
+		
+		openButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String userhome = System.getProperty("user.home");
+				JFileChooser ModulefileChooser = new JFileChooser(userhome + "\\Documets");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "cvs");
+				ModulefileChooser.setFileFilter(filter);
+				ModulefileChooser.setAcceptAllFileFilterUsed(false);
+				ModulefileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+				Component parent = null;
+				int returnVal = ModulefileChooser.showOpenDialog(parent);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					System.out.println("You chose to open this file: " + ModulefileChooser.getSelectedFile().getName());
+					CohortPath = ModulefileChooser.getSelectedFile().getAbsolutePath().toString();
+					System.out.println(CohortPath);
+				}
+
+				ModulefileChooser.setOpaque(false);
+				
+				try {
+					String textLine;
+					FileReader fr = new FileReader(CohortPath);
+					BufferedReader reader = new BufferedReader(fr);
+					         while((textLine=reader.readLine())!=null){
+					             // textLine = reader.readLine(); // remove this line
+					        	 textArea.read(reader,"jTextArea1");
+					         } 
+					}
+					catch (IOException ioe) {
+					System.err.println(ioe);
+					System.exit(1);
+					}
+
+			}
+		});
 		return mainPanel;
 
 	}
-
+	
+	
 	/**
 	 * used to create the background image for the panel
 	 */
