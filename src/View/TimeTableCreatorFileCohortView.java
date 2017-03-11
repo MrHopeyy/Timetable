@@ -144,9 +144,9 @@ public class TimeTableCreatorFileCohortView {
 			{
 				openButton = new JButton();
 				openButton.setForeground(Color.BLACK);
-				openButton.setPreferredSize(new Dimension(125, 50));
+				openButton.setPreferredSize(new Dimension(125, 35));
 				openButton.setText("Open File");
-				openButton.setFont(new Font("Arial", Font.BOLD, 24));
+				openButton.setFont(new Font("Arial", Font.BOLD, 22));
 				openButton.setHorizontalTextPosition(JButton.CENTER);
 				openButton.setVerticalTextPosition(JButton.CENTER);
 			}

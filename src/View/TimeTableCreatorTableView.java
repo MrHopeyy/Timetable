@@ -76,15 +76,12 @@ import javax.swing.table.*;
 public class TimeTableCreatorTableView {
 
 	private JPanel mainPanel;
-	
 
 	/*
 	 * constructor for the menuView
 	 */
 	public TimeTableCreatorTableView() {
-		
-		
-		
+
 	}
 
 	/**
@@ -114,41 +111,36 @@ public class TimeTableCreatorTableView {
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
-		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
-				"18:00" };
+		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00" };
 		Object[][] rowData = { { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" } };
+							   { "0", "1", "1", "0", "0", "0", "0", "0", "0", "0" },
+							   { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+							   { "0", "0", "0", "2", "2", "0", "0", "0", "0", "0" } };
 
 		JTable mainTable = new JTable(rowData, columnNames);
 		mainTable.setEnabled(false);
 		JScrollPane scrollPane = new JScrollPane(mainTable);
+		scrollPane.setPreferredSize(new Dimension(500, 100));
 		JTable rowTable = new RowNumberTable(mainTable);
 		rowTable.setOpaque(false);
 		scrollPane.setRowHeaderView(rowTable);
 		scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
 		scrollPane.setEnabled(false);
-		// scrollPane.setOpaque(false);
-		// scrollPane.getViewport().setOpaque(false);
 
 		// setting the layout of the main frame to a border layout
 
 		try {
 
 			// creating a new panel center and setting the properties
-			JPanel center = new JPanel();
-			center.setLayout(new BorderLayout());
-			// center.setSize(720, 480);
-			center.setOpaque(false);
-			center.add(scrollPane, BorderLayout.CENTER);
-
-			// creating a new gridbag layout for all of the buttons and adding
-			// them
+			// creating a new gridbag layout for all of the buttons and adding them
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.insets = new Insets(8, 8, 8, 8);
-			// gbc.gridwidth = gbc.REMAINDER;
+			gbc.gridwidth = gbc.REMAINDER;
+			JPanel center = new JPanel();
+			GridBagLayout thisLayout = new GridBagLayout();
+			center.setLayout(thisLayout);
+			center.setOpaque(false);
+			center.add(scrollPane, gbc);
 
 			Border thickBorder = new LineBorder(Color.BLACK, 4);
 			/**
@@ -167,7 +159,7 @@ public class TimeTableCreatorTableView {
 				printButton = new JButton();
 				printButton.setForeground(Color.BLACK);
 				printButton.setPreferredSize(new Dimension(125, 50));
-				printButton.setText("Print Table");
+				printButton.setText("Save to file");
 				printButton.setFont(new Font("Arial", Font.BOLD, 12));
 				printButton.setHorizontalTextPosition(JButton.CENTER);
 				printButton.setVerticalTextPosition(JButton.CENTER);
@@ -214,37 +206,71 @@ public class TimeTableCreatorTableView {
 
 		printButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 				Date dateobj = new Date();
-				
+
 				File file = new File("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".txt");
 
-			    if (!file.exists()) {
-			        try {
+				if (!file.exists()) {
+					try {
 						file.createNewFile();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-			    }
+				} else {
+
+					StringBuilder builder = new StringBuilder();
+					for (int i = 0; i < rowData.length; i++) {
+						for (int j = 0; j < rowData[i].length; j++) {
+							builder.append(rowData[i][j] + "");
+							if (j < rowData[i].length - 1)
+								builder.append(" ");
+						}
+						builder.append("\n");
+					}
+					BufferedWriter writer = null;
+					try {
+
+						writer = new BufferedWriter(new FileWriter(file));
+						JOptionPane.showMessageDialog(mainPanel, "File Saved!",
+								null, JOptionPane.PLAIN_MESSAGE);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					try {
+						writer.write(builder.toString());
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} // save the string representation of the board
+					try {
+						writer.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
 
 				StringBuilder builder = new StringBuilder();
-				for(int i = 0; i < rowData.length; i++)
-				{
-				   for(int j = 0; j < rowData[i].length; j++)
-				   {
-				      builder.append(rowData[i][j]+"");
-				      if(j < rowData[i].length - 1)
-				         builder.append(" ");
-				   }
-				   builder.append("\n");
+				for (int i = 0; i < rowData.length; i++) {
+					for (int j = 0; j < rowData[i].length; j++) {
+						builder.append(rowData[i][j] + "");
+						if (j < rowData[i].length - 1)
+							builder.append(" ");
+					}
+					builder.append("\n");
 				}
 				BufferedWriter writer = null;
 				try {
-					
-					writer = new BufferedWriter(new FileWriter("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".txt"));
-					
+
+					writer = new BufferedWriter(new FileWriter(file));
+					JOptionPane.showMessageDialog(mainPanel, "File Saved!",
+							null, JOptionPane.PLAIN_MESSAGE);
+
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -254,14 +280,14 @@ public class TimeTableCreatorTableView {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}//save the string representation of the board
+				} // save the string representation of the board
 				try {
 					writer.close();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+
 			}
 
 		});
@@ -285,4 +311,5 @@ public class TimeTableCreatorTableView {
 		};
 		return panel;
 	}
+
 }

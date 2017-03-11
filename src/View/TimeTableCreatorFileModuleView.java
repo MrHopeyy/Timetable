@@ -142,9 +142,9 @@ public class TimeTableCreatorFileModuleView {
 			{
 				openButton = new JButton();
 				openButton.setForeground(Color.BLACK);
-				openButton.setPreferredSize(new Dimension(125, 50));
+				openButton.setPreferredSize(new Dimension(125, 35));
 				openButton.setText("Open File");
-				openButton.setFont(new Font("Arial", Font.BOLD, 24));
+				openButton.setFont(new Font("Arial", Font.BOLD, 22));
 				openButton.setHorizontalTextPosition(JButton.CENTER);
 				openButton.setVerticalTextPosition(JButton.CENTER);
 			}
@@ -236,11 +236,11 @@ public class TimeTableCreatorFileModuleView {
 					FileReader fr = new FileReader(ModulePath);
 					BufferedReader reader = new BufferedReader(fr);
 					while ((textLine = reader.readLine()) != null) {
-						// textLine = reader.readLine(); // remove this line
 						textArea.read(reader, "jTextArea1");
 					}
 				} catch (IOException ioe) {
 					System.err.println(ioe);
+					
 					System.exit(1);
 				}
 

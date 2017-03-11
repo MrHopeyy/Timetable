@@ -10,8 +10,9 @@ public class MainFrame {
 
 	public static JFrame mainFrame;
 
-	//Creates a jFrame to Contain all of the other views in the application.
+	// Creates a jFrame to Contain all of the other views in the application.
 	public MainFrame() throws IOException {
+
 		mainFrame = new JFrame("TimeTable Creator");
 		mainFrame.setMinimumSize(new Dimension(720, 480));
 		mainFrame.setLayout(new BorderLayout());

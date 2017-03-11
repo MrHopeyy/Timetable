@@ -11,22 +11,34 @@ import View.TimeTableCreatorInputView;
 
 public class Module {
 
+	// Loads the library for the constrain tools
 	static {
 		System.loadLibrary("jniortools");
 	}
 
+	// Variable int for the length of a single day.
 	public static int N_HOURS = 10;
-	public static int N_DAYS = 5;
+	// Variable int for how many days in a week.
+	public static int N_DAYS = 4;
+	// String for the module code of the object.
 	public String Module_Code;
+	// Int for the amount of intro hours a module wants.
 	public static int introHours;
+	// Int for the amount of total hours a module wants.
 	public static int totalHours;
-	public static IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
-	public static IntVar[][] timetable_Flatten;
 
-	public static Solver solver = new Solver("Module");
+	// public static IntVar[][] timetable_Flatten;
 
-	public Module(Solver solver,String Module_Code, int introHours, int totalHours) {
+	public Module(Solver solver, String Module_Code, int introHours, int totalHours) {
+
+		// initialising the variables of the object
 		this.Module_Code = Module_Code;
+		this.introHours = introHours;
+		this.totalHours = totalHours;
+
+		// 2d array of timetable
+		IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
+
 		// Timetable Flatten is a 1d array of timetable.
 		IntVar[] timetable_Flatten = solver.makeBoolVarArray(N_DAYS * N_HOURS);
 
@@ -43,75 +55,55 @@ public class Module {
 		// constraints
 		//
 
+		// Constraint to constrain the total hours of a module to the timetable
 		solver.addConstraint(solver.makeSumEquality(timetable_Flatten, Module.getTotalHours(totalHours)));
+		// Constraint to constrain the introduction hours of a module to the
+		// first row of the timetable
 		solver.addConstraint(solver.makeSumEquality(timetable[0], Module.getIntroHours(introHours)));
 	}
 
-	// setter for the module code of a module
-	void setModuleCode(String Module_Code) {
-
-		Module.Module_Code = Module_Code;
-
-	}
-
-	// setter for the intro hours of a module
-	void setIntroHours(int introHours) {
-
-		Module.introHours = introHours;
-
-	}
-
-	// setter for the total hours of a module
-	void setTotalHours(int totalHours) {
-
-		Module.totalHours = totalHours;
-
-	}
-
-	// setter for the module code of a module
+	// getter for the module code of a module
 	public String getModuleCode() {
 
 		return Module_Code;
 
 	}
 
-	// setter for the intro hours of a module
+	// getter for the intro hours of a module
 	private static int getIntroHours(int introHours) {
 
 		return introHours;
 
 	}
 
-	// setter for the total hours of a module
+	// getter for the total hours of a module
 	private static int getTotalHours(int totalHours) {
 
 		return totalHours;
 
 	}
 
-	// solver
-	public static void solve() {
-
-		//
-		// Solver to make a single module timetable.
-		//
-
-		// DecisionBuilder db = solver.makePhase(timetable_Flatten,
-		// Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
-		// solver.newSearch(db);
-		// solver.nextSolution();
-		// for (int i = 0; i < N_DAYS; i++) {
-		// for (int j = 0; j < N_HOURS; j++) {
-		// System.out.print(timetable[i][j].value() + " ");
-		//
-		// }
-		//
-		// System.out.println();
-		//
-		// }
-		//
-		// }
-
-	}
-
 }
+// public static void solve() {
+
+//
+// Solver to make a single module timetable.
+//
+
+// DecisionBuilder db = solver.makePhase(timetable_Flatten,
+// Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
+// solver.newSearch(db);
+// solver.nextSolution();
+// for (int i = 0; i < N_DAYS; i++) {
+// for (int j = 0; j < N_HOURS; j++) {
+// System.out.print(timetable[i][j].value() + " ");
+//
+// }
+//
+// System.out.println();
+//
+// }
+//
+// }
+
+// }

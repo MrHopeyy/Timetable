@@ -120,8 +120,6 @@ public class TimeTableCreatorMenuView {
 				instButton = new JButton();
 				instButton.setForeground(Color.BLACK);
 				instButton.setPreferredSize(new Dimension(250, 50));
-				// exitGame.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				instButton.setText("Instructions");
 				instButton.setFont(new Font("Arial", Font.BOLD, 24));
 				instButton.setHorizontalTextPosition(JButton.CENTER);
@@ -133,14 +131,12 @@ public class TimeTableCreatorMenuView {
 				aboutButton = new JButton();
 				aboutButton.setForeground(Color.BLACK);
 				aboutButton.setPreferredSize(new Dimension(250, 50));
-				// exitGame.setIcon(new
-				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				aboutButton.setText("About");
 				aboutButton.setFont(new Font("Arial", Font.BOLD, 24));
 				aboutButton.setHorizontalTextPosition(JButton.CENTER);
 				aboutButton.setVerticalTextPosition(JButton.CENTER);
 
-				center.add(aboutButton, gbc);
+				//center.add(aboutButton, gbc);
 			}
 			{
 				ExitButton = new JButton();

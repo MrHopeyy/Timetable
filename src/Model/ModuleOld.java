@@ -16,7 +16,7 @@ public class ModuleOld {
 	}
 
 	public static int N_HOURS = 10;
-	public static int N_DAYS = 5;
+	public static int N_DAYS = 4;
 	public static String Module_Code;
 	public static int introHours;
 	public static int totalHours;
