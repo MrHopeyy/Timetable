@@ -98,6 +98,7 @@ public class ModuleOld {
 		// constraints
 		//
 
+		
 		solver.addConstraint(solver.makeSumEquality(timetable_Flatten, ModuleOld.getTotalHours(totalHours)));
 		solver.addConstraint(solver.makeSumEquality(timetable[0], ModuleOld.getIntroHours(introHours)));
 
