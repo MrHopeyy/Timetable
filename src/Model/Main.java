@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import com.google.ortools.constraintsolver.Solver;
 
+import View.TimeTableCreatorFileCohortView;
+import View.TimeTableCreatorFileModuleView;
+
 public class Main {
 
 	static {
@@ -29,9 +32,8 @@ public class Main {
 
 	public static ArrayList<Module> importModules(Solver solver) {
 
-		String csvFile2 = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
-		// public static String csvFile =
-		// TimeTableCreatorFileModuleView.ModulePath;
+		//String csvFile2 = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
+		String csvFile2 = TimeTableCreatorFileModuleView.ModulePath;
 		ArrayList<Module> modules = new ArrayList<Module>();
 		int i = 0;
 		try {
@@ -67,9 +69,8 @@ public class Main {
 
 	public static String[] importCohort() throws IOException {
 
-		String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Cohort.cvs";
-		// public static String csvFile2 =
-		// TimeTableCreatorFileCohortView.CohortPath;
+		//String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Cohort.cvs";
+		 String csvFile = TimeTableCreatorFileCohortView.CohortPath;
 		String[] programme_Data = null;
 		// String[] cohortLine;
 		// String[] arraySplit = new String[100];
@@ -169,7 +170,7 @@ public class Main {
 	public static Programme makeProgramme(Solver solver, ArrayList<Module> modules, String[] programme_Data)
 			throws IOException {
 
-		Programme prog = new Programme();
+		Programme prog = new Programme(programme_Data.length, solver);
 
 		for (int i = 0; i < programme_Data.length; i++) {
 			for (int x = 0; x < modules.size(); x++) {
@@ -177,9 +178,9 @@ public class Main {
 
 					prog.addModule(solver, modules.get(x));
 
-					System.out.println("Match found");
+					//System.out.println("Match found");
 				} else {
-					System.out.println("Not found");
+					//System.out.println("Not found");
 				}
 			}
 

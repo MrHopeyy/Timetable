@@ -50,6 +50,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Model.Main;
+
 public class TimeTableCreatorFileCohortView {
 
 	private JPanel mainPanel;
@@ -204,6 +206,12 @@ public class TimeTableCreatorFileCohortView {
 					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
 					MainFrame.mainFrame.repaint();
 					MainFrame.mainFrame.revalidate();
+					try {
+						Main.solve();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
 				} else {
 

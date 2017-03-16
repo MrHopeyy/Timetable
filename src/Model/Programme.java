@@ -6,6 +6,8 @@ import com.google.ortools.constraintsolver.DecisionBuilder;
 import com.google.ortools.constraintsolver.IntVar;
 import com.google.ortools.constraintsolver.Solver;
 
+import View.TimeTableCreatorFileCohortView;
+
 public class Programme {
 
 	static {
@@ -20,10 +22,21 @@ public class Programme {
 	IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
 	// Creating the an array list for the module objects sourced form the main class.
 	ArrayList<String> module_codes = new ArrayList<String>();
+	
+	private IntVar[] timetable_Flatten;
 
-	public Programme() {
+	public Programme(int nModulesInProgramme, Solver solver) {
 
 		module_codes.add("BREAK");
+		
+		timetable_Flatten = solver.makeIntVarArray(N_DAYS * N_HOURS, 0, nModulesInProgramme);
+		
+		for (int i = 0; i < N_DAYS; i++) {
+			for (int j = 0; j < N_HOURS; j++) {
+				// Creating the flattened version of the timetable array.
+				timetable[i][j] = timetable_Flatten[i * N_HOURS + j];
+			}
+		}
 
 	}
 
@@ -36,37 +49,6 @@ public class Programme {
 		int module_index = module_codes.size() - 1;
 
 		IntVar[][] modTimetable = module.getTimetable();
-		
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Printing the module table before its compared														  ///
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		IntVar[] timetable_Flatten = solver.makeBoolVarArray(N_DAYS * N_HOURS);
-
-		// For loop to create the length and width of the timetable array.
-		for (int t = 0; t < N_DAYS; t++) {
-			for (int n = 0; n < N_HOURS; n++) {
-
-				// Creating the flattened version of the timetable array.
-				modTimetable[t][n] = timetable_Flatten[t * N_HOURS + n];
-			}
-		}
-
-		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
-		solver.newSearch(db);
-		solver.nextSolution();
-		for (int k = 0; k < N_DAYS; k++) {
-			for (int l = 0; l < N_HOURS; l++) {
-				System.out.print(modTimetable[k][l].value() + " ");
-
-			}
-
-			System.out.println();
-
-		}
-		
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 		for (int day = 0; day < modTimetable.length; day++) {
 			for (int hour = 0; hour < modTimetable[day].length; hour++) {
@@ -83,23 +65,18 @@ public class Programme {
 	public IntVar[][] generateTimetable(Solver solver) {
 
 		// Timetable Flatten is a 1d array of timetable.
-		IntVar[] timetable_Flatten = solver.makeBoolVarArray(N_DAYS * N_HOURS);
-
-		// For loop to create the length and width of the timetable array.
-		for (int i = 0; i < N_DAYS; i++) {
-			for (int j = 0; j < N_HOURS; j++) {
-
-				// Creating the flattened version of the timetable array.
-				timetable[i][j] = timetable_Flatten[i * N_HOURS + j];
-			}
-		}
 
 		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
 		solver.newSearch(db);
 		solver.nextSolution();
 		for (int k = 0; k < N_DAYS; k++) {
 			for (int l = 0; l < N_HOURS; l++) {
-				System.out.print(timetable[k][l].value() + " ");
+				//System.out.print(timetable[k][l].value() + " ");
+				
+				IntVar value = timetable[k][l];
+				module_codes.get((int) value.value());
+				System.out.print(module_codes.get((int) value.value()) + " ");
+				
 
 			}
 
