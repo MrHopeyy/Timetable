@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 import com.google.ortools.constraintsolver.Solver;
 
 import View.TimeTableCreatorFileCohortView;
@@ -32,10 +33,9 @@ public class Main {
 
 	public static ArrayList<Module> importModules(Solver solver) {
 
-		//String csvFile2 = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Modules.cvs";
 		String csvFile2 = TimeTableCreatorFileModuleView.ModulePath;
 		ArrayList<Module> modules = new ArrayList<Module>();
-		int i = 0;
+		//int i = 0;
 		try {
 
 			br = new BufferedReader(new FileReader(csvFile2));
@@ -45,7 +45,7 @@ public class Main {
 
 				modules.add(new Module(solver, moduleArray[0], Integer.parseInt(moduleArray[1]),
 						Integer.parseInt(moduleArray[2])));
-				//System.out.println(modules.get(i));
+				System.out.println(moduleArray[0].toString());
 
 			}
 
@@ -63,13 +63,12 @@ public class Main {
 			}
 		}
 
-		// System.out.println("");
+		System.out.println("");
 		return modules;
 	}
 
 	public static String[] importCohort() throws IOException {
 
-		//String csvFile = "/Users/AlexHope/Documents/workspace/Timetable/src/Files/Cohort.cvs";
 		 String csvFile = TimeTableCreatorFileCohortView.CohortPath;
 		String[] programme_Data = null;
 		// String[] cohortLine;
@@ -87,7 +86,7 @@ public class Main {
 			while ((line = br.readLine()) != null) {
 
 				programme_Data = line.split(cvsSplitBy);
-				//System.out.println(Arrays.toString(programme_Data));
+				System.out.println(Arrays.toString(programme_Data));
 			}
 
 		} catch (FileNotFoundException e) {
@@ -102,6 +101,7 @@ public class Main {
 					e.printStackTrace();
 				}
 			}
+			System.out.println("");
 		}
 
 		return programme_Data;
@@ -165,7 +165,7 @@ public class Main {
 	// }
 
 	// System.out.println(Arrays.deepToString(programme_Data));
-	// System.out.println("");
+	
 
 	public static Programme makeProgramme(Solver solver, ArrayList<Module> modules, String[] programme_Data)
 			throws IOException {
@@ -173,16 +173,18 @@ public class Main {
 		Programme prog = new Programme(programme_Data.length, solver);
 
 		for (int i = 0; i < programme_Data.length; i++) {
-			for (int x = 0; x < modules.size(); x++) {
-				if (programme_Data[i].equals(modules.get(x).getModuleCode())) {
+			for (int a = 0; a < modules.size(); a++) {
+				if (programme_Data[i].equals(modules.get(a).getModuleCode())) {
 
-					prog.addModule(solver, modules.get(x));
+					prog.addModule(solver, modules.get(a));
 
-					//System.out.println("Match found");
+					System.out.println("Match found");
 				} else {
-					//System.out.println("Not found");
+					System.out.println("Not found");
 				}
 			}
+			
+			System.out.println("");
 
 		}
 
@@ -198,12 +200,8 @@ public class Main {
 		Programme programme = makeProgramme(solver, modules, programme_data);
 
 		programme.generateTimetable(solver);
+		
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		Main.solve();
-
-	}
 
 }

@@ -49,6 +49,12 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+
+import com.google.ortools.constraintsolver.Solver;
+
+import Model.Main;
+import Model.Programme;
 
 public class TimeTableCreatorFileModuleView {
 
@@ -64,8 +70,10 @@ public class TimeTableCreatorFileModuleView {
 
 	/**
 	 * used to create a panel for the main menu
+	 * 
+	 * @throws IOException
 	 */
-	public JPanel buildTimeTableCreatorMenu() {
+	public JPanel buildTimeTableCreatorMenu() throws IOException {
 
 		final int blankSpace = 6; // blank at edge of panels
 
@@ -85,19 +93,22 @@ public class TimeTableCreatorFileModuleView {
 		JButton genButton = new JButton();
 		JButton openButton = new JButton();
 
-		JTextArea textArea = new JTextArea(5, 20);
+		JTextArea textArea = new JTextArea();
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		textArea.setEditable(false);
 
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setPreferredSize(new Dimension(250, 250));
+		scrollPane.setPreferredSize(new Dimension(600, 250));
 
-		JLabel label1 = new JLabel("Select Module File");
+		JLabel label1 = new JLabel("Select module file");
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
-		// ((JScrollPane) ModulefileChooser).getViewport().setOpaque(false);
+		JLabel label2 = new JLabel("Preview of file");
+		label2.setFont(new Font("Arial", Font.BOLD, 12));
+		label2.setVerticalTextPosition(JLabel.CENTER);
+		label2.setHorizontalTextPosition(JLabel.CENTER);
 
 		// setting the layout of the main frame to a border layout
 
@@ -114,7 +125,7 @@ public class TimeTableCreatorFileModuleView {
 			// them
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.insets = new Insets(8, 8, 8, 8);
-			// gbc.gridwidth = gbc.REMAINDER;
+			gbc.gridwidth = gbc.REMAINDER;
 
 			Border thickBorder = new LineBorder(Color.BLACK, 4);
 			/**
@@ -123,18 +134,18 @@ public class TimeTableCreatorFileModuleView {
 			{
 				backButton = new JButton();
 				backButton.setForeground(Color.BLACK);
-				backButton.setPreferredSize(new Dimension(125, 50));
+				backButton.setPreferredSize(new Dimension(100, 35));
 				backButton.setText("Back");
-				backButton.setFont(new Font("Arial", Font.BOLD, 24));
+				backButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				backButton.setHorizontalTextPosition(JButton.CENTER);
 				backButton.setVerticalTextPosition(JButton.CENTER);
 			}
 			{
 				genButton = new JButton();
 				genButton.setForeground(Color.BLACK);
-				genButton.setPreferredSize(new Dimension(125, 50));
+				genButton.setPreferredSize(new Dimension(100, 35));
 				genButton.setText("Next");
-				genButton.setFont(new Font("Arial", Font.BOLD, 24));
+				genButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				genButton.setHorizontalTextPosition(JButton.CENTER);
 				genButton.setVerticalTextPosition(JButton.CENTER);
 			}
@@ -142,9 +153,9 @@ public class TimeTableCreatorFileModuleView {
 			{
 				openButton = new JButton();
 				openButton.setForeground(Color.BLACK);
-				openButton.setPreferredSize(new Dimension(125, 35));
+				openButton.setPreferredSize(new Dimension(100, 35));
 				openButton.setText("Open File");
-				openButton.setFont(new Font("Arial", Font.BOLD, 22));
+				openButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				openButton.setHorizontalTextPosition(JButton.CENTER);
 				openButton.setVerticalTextPosition(JButton.CENTER);
 			}
@@ -157,6 +168,7 @@ public class TimeTableCreatorFileModuleView {
 
 			gbc.gridwidth = gbc.REMAINDER;
 			// center.add(ModulefileChooser, gbc);
+			// center.add(label2, gbc);
 			center.add(scrollPane, gbc);
 			center.add(openButton, gbc);
 
@@ -224,24 +236,25 @@ public class TimeTableCreatorFileModuleView {
 				Component parent = null;
 				int returnVal = ModulefileChooser.showOpenDialog(parent);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					System.out.println("You chose to open this file: " + ModulefileChooser.getSelectedFile().getName());
+
 					ModulePath = ModulefileChooser.getSelectedFile().getAbsolutePath().toString();
-					System.out.println(ModulePath);
+
 				}
 
 				ModulefileChooser.setOpaque(false);
 
+				FileReader reader = null;
 				try {
-					String textLine;
-					FileReader fr = new FileReader(ModulePath);
-					BufferedReader reader = new BufferedReader(fr);
-					while ((textLine = reader.readLine()) != null) {
-						textArea.read(reader, "jTextArea1");
-					}
-				} catch (IOException ioe) {
-					System.err.println(ioe);
-					
-					System.exit(1);
+					reader = new FileReader(ModulePath);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					textArea.read(reader, ModulePath);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 
 			}

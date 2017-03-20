@@ -87,12 +87,13 @@ public class TimeTableCreatorFileCohortView {
 		JButton genButton = new JButton();
 		JButton openButton = new JButton();
 
-		JTextArea textArea = new JTextArea(5, 20);
+		JTextArea textArea = new JTextArea();
+		
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		textArea.setEditable(false);
 
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setPreferredSize(new Dimension(250, 250));
+		scrollPane.setPreferredSize(new Dimension(600, 250));
 
 		JLabel label1 = new JLabel("Select Cohort File");
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
@@ -123,22 +124,22 @@ public class TimeTableCreatorFileCohortView {
 			{
 				backButton = new JButton();
 				backButton.setForeground(Color.BLACK);
-				backButton.setPreferredSize(new Dimension(125, 50));
+				backButton.setPreferredSize(new Dimension(100, 35));
 				// ExitButton.setIcon(new
 				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				backButton.setText("Back");
-				backButton.setFont(new Font("Arial", Font.BOLD, 24));
+				backButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				backButton.setHorizontalTextPosition(JButton.CENTER);
 				backButton.setVerticalTextPosition(JButton.CENTER);
 			}
 			{
 				genButton = new JButton();
 				genButton.setForeground(Color.BLACK);
-				genButton.setPreferredSize(new Dimension(125, 50));
+				genButton.setPreferredSize(new Dimension(100, 35));
 				// ExitButton.setIcon(new
 				// ImageIcon(this.getClass().getResource("/Files/button5.jpg")));
 				genButton.setText("Next");
-				genButton.setFont(new Font("Arial", Font.BOLD, 24));
+				genButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				genButton.setHorizontalTextPosition(JButton.CENTER);
 				genButton.setVerticalTextPosition(JButton.CENTER);
 			}
@@ -146,9 +147,9 @@ public class TimeTableCreatorFileCohortView {
 			{
 				openButton = new JButton();
 				openButton.setForeground(Color.BLACK);
-				openButton.setPreferredSize(new Dimension(125, 35));
+				openButton.setPreferredSize(new Dimension(100, 35));
 				openButton.setText("Open File");
-				openButton.setFont(new Font("Arial", Font.BOLD, 22));
+				openButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				openButton.setHorizontalTextPosition(JButton.CENTER);
 				openButton.setVerticalTextPosition(JButton.CENTER);
 			}
@@ -160,7 +161,6 @@ public class TimeTableCreatorFileCohortView {
 			commandBox.add(genButton, gbc);
 
 			gbc.gridwidth = gbc.REMAINDER;
-		//	center.add(CohortfileChooser, gbc);
 			center.add(scrollPane, gbc);
 			center.add(openButton, gbc);
 
@@ -188,7 +188,12 @@ public class TimeTableCreatorFileCohortView {
 
 				MainFrame.mainFrame.getContentPane().removeAll();
 				TimeTableCreatorFileModuleView gov = new TimeTableCreatorFileModuleView();
-				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+				try {
+					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				MainFrame.mainFrame.repaint();
 				MainFrame.mainFrame.revalidate();
 				CohortPath = null;
@@ -203,7 +208,12 @@ public class TimeTableCreatorFileCohortView {
 
 					MainFrame.mainFrame.getContentPane().removeAll();
 					TimeTableCreatorTableView gov = new TimeTableCreatorTableView();
-					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+					try {
+						MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 					MainFrame.mainFrame.repaint();
 					MainFrame.mainFrame.revalidate();
 					try {
@@ -235,26 +245,26 @@ public class TimeTableCreatorFileCohortView {
 				Component parent = null;
 				int returnVal = ModulefileChooser.showOpenDialog(parent);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					System.out.println("You chose to open this file: " + ModulefileChooser.getSelectedFile().getName());
+					
 					CohortPath = ModulefileChooser.getSelectedFile().getAbsolutePath().toString();
-					System.out.println(CohortPath);
+					
 				}
 
 				ModulefileChooser.setOpaque(false);
 				
+				FileReader reader = null;
 				try {
-					String textLine;
-					FileReader fr = new FileReader(CohortPath);
-					BufferedReader reader = new BufferedReader(fr);
-					         while((textLine=reader.readLine())!=null){
-					             // textLine = reader.readLine(); // remove this line
-					        	 textArea.read(reader,"jTextArea1");
-					         } 
-					}
-					catch (IOException ioe) {
-					System.err.println(ioe);
-					System.exit(1);
-					}
+					reader = new FileReader(CohortPath);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					textArea.read(reader,CohortPath);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 			}
 		});

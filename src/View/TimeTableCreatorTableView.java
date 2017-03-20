@@ -31,8 +31,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -59,12 +62,16 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.google.ortools.constraintsolver.IntVar;
+import com.google.ortools.constraintsolver.Solver;
 
+import Model.Main;
 import Model.Module;
+import Model.Programme;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.awt.*;
 import java.awt.event.*;
@@ -76,18 +83,30 @@ import javax.swing.table.*;
 public class TimeTableCreatorTableView {
 
 	private JPanel mainPanel;
+	// Variable int for the length of a single day.
+	public final static int N_HOURS = 10;
+	// Variable int for how many days in a week.
+	public final static int N_DAYS = 4;
+	public static BufferedReader br = null;
+	public static String line = "";
+	public static String line2 = " ";
+	public static String cvsSplitBy = ",";
 
 	/*
 	 * constructor for the menuView
 	 */
+
+	
 	public TimeTableCreatorTableView() {
 
 	}
 
 	/**
 	 * used to create a panel for the main menu
+	 * 
+	 * @throws IOException
 	 */
-	public JPanel buildTimeTableCreatorMenu() {
+	public JPanel buildTimeTableCreatorMenu() throws IOException {
 
 		final int blankSpace = 6; // blank at edge of panels
 
@@ -104,18 +123,21 @@ public class TimeTableCreatorTableView {
 
 		// creating all of the buttons for the menu
 		JButton backButton = new JButton();
-		JButton printButton = new JButton();
+		JButton printTXTButton = new JButton();
+		JButton printCVSButton = new JButton();
+		JButton exitButton = new JButton();
 
 		JLabel label1 = new JLabel("Generated Table");
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
-		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00" };
+		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
+				"18:00" };
 		Object[][] rowData = { { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-							   { "0", "1", "1", "0", "0", "0", "0", "0", "0", "0" },
-							   { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-							   { "0", "0", "0", "2", "2", "0", "0", "0", "0", "0" } };
+				{ "0", "1", "1", "0", "0", "0", "0", "0", "0", "0" },
+				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+				{ "0", "0", "0", "2", "2", "0", "0", "0", "0", "0" } };
 
 		JTable mainTable = new JTable(rowData, columnNames);
 		mainTable.setEnabled(false);
@@ -132,7 +154,8 @@ public class TimeTableCreatorTableView {
 		try {
 
 			// creating a new panel center and setting the properties
-			// creating a new gridbag layout for all of the buttons and adding them
+			// creating a new gridbag layout for all of the buttons and adding
+			// them
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.insets = new Insets(8, 8, 8, 8);
 			gbc.gridwidth = gbc.REMAINDER;
@@ -149,27 +172,49 @@ public class TimeTableCreatorTableView {
 			{
 				backButton = new JButton();
 				backButton.setForeground(Color.BLACK);
-				backButton.setPreferredSize(new Dimension(125, 50));
+				backButton.setPreferredSize(new Dimension(100, 35));
 				backButton.setText("Back to Menu");
-				backButton.setFont(new Font("Arial", Font.BOLD, 12));
+				backButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				backButton.setHorizontalTextPosition(JButton.CENTER);
 				backButton.setVerticalTextPosition(JButton.CENTER);
 			}
 			{
-				printButton = new JButton();
-				printButton.setForeground(Color.BLACK);
-				printButton.setPreferredSize(new Dimension(125, 50));
-				printButton.setText("Save to file");
-				printButton.setFont(new Font("Arial", Font.BOLD, 12));
-				printButton.setHorizontalTextPosition(JButton.CENTER);
-				printButton.setVerticalTextPosition(JButton.CENTER);
+				printTXTButton = new JButton();
+				printTXTButton.setForeground(Color.BLACK);
+				printTXTButton.setPreferredSize(new Dimension(100, 35));
+				printTXTButton.setText("Save to .TXT");
+				printTXTButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				printTXTButton.setHorizontalTextPosition(JButton.CENTER);
+				printTXTButton.setVerticalTextPosition(JButton.CENTER);
+			}
+			
+			{
+				printCVSButton = new JButton();
+				printCVSButton.setForeground(Color.BLACK);
+				printCVSButton.setPreferredSize(new Dimension(100, 35));
+				printCVSButton.setText("Save to .CVS");
+				printCVSButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				printCVSButton.setHorizontalTextPosition(JButton.CENTER);
+				printCVSButton.setVerticalTextPosition(JButton.CENTER);
+			}
+			
+			{
+				exitButton = new JButton();
+				exitButton.setForeground(Color.BLACK);
+				exitButton.setPreferredSize(new Dimension(100, 35));
+				exitButton.setText("Exit");
+				exitButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				exitButton.setHorizontalTextPosition(JButton.CENTER);
+				exitButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			JPanel commandBox = new JPanel();
 			commandBox.setOpaque(false);
 			commandBox.setLayout(new FlowLayout());
 			commandBox.add(backButton, gbc);
-			commandBox.add(printButton, gbc);
+			commandBox.add(printTXTButton, gbc);
+			commandBox.add(printCVSButton, gbc);
+			commandBox.add(exitButton, gbc);
 
 			JPanel titleBox = new JPanel();
 			titleBox.setOpaque(false);
@@ -203,8 +248,19 @@ public class TimeTableCreatorTableView {
 
 			}
 		});
+		
+		exitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
-		printButton.addActionListener(new ActionListener() {
+				if (JOptionPane.showConfirmDialog(mainPanel, "Are you sure to exit the Program?", "Really Closing?",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+
+			}
+		});
+
+		printTXTButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
@@ -234,8 +290,7 @@ public class TimeTableCreatorTableView {
 					try {
 
 						writer = new BufferedWriter(new FileWriter(file));
-						JOptionPane.showMessageDialog(mainPanel, "File Saved!",
-								null, JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -268,8 +323,93 @@ public class TimeTableCreatorTableView {
 				try {
 
 					writer = new BufferedWriter(new FileWriter(file));
-					JOptionPane.showMessageDialog(mainPanel, "File Saved!",
-							null, JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					writer.write(builder.toString());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} // save the string representation of the board
+				try {
+					writer.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+
+		});
+		
+		printCVSButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+				Date dateobj = new Date();
+
+				File file = new File("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".cvs");
+
+				if (!file.exists()) {
+					try {
+						file.createNewFile();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else {
+
+					StringBuilder builder = new StringBuilder();
+					for (int i = 0; i < rowData.length; i++) {
+						for (int j = 0; j < rowData[i].length; j++) {
+							builder.append(rowData[i][j] + "");
+							if (j < rowData[i].length - 1)
+								builder.append(" ");
+						}
+						builder.append("\n");
+					}
+					BufferedWriter writer = null;
+					try {
+
+						writer = new BufferedWriter(new FileWriter(file));
+						JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					try {
+						writer.write(builder.toString());
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} // save the string representation of the board
+					try {
+						writer.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+
+				StringBuilder builder = new StringBuilder();
+				for (int i = 0; i < rowData.length; i++) {
+					for (int j = 0; j < rowData[i].length; j++) {
+						builder.append(rowData[i][j] + "");
+						if (j < rowData[i].length - 1)
+							builder.append(" ");
+					}
+					builder.append("\n");
+				}
+				BufferedWriter writer = null;
+				try {
+
+					writer = new BufferedWriter(new FileWriter(file));
+					JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
 
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

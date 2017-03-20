@@ -179,7 +179,12 @@ public class TimeTableCreatorMenuView {
 
 				MainFrame.mainFrame.getContentPane().removeAll();
 				TimeTableCreatorFileModuleView gov = new TimeTableCreatorFileModuleView();
-				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+				try {
+					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				MainFrame.mainFrame.repaint();
 				MainFrame.mainFrame.revalidate();
 
@@ -198,17 +203,7 @@ public class TimeTableCreatorMenuView {
 			}
 		});
 
-		aboutButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 
-				MainFrame.mainFrame.getContentPane().removeAll();
-				TimeTableCreatorAboutView gov = new TimeTableCreatorAboutView();
-				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
-				MainFrame.mainFrame.repaint();
-				MainFrame.mainFrame.revalidate();
-
-			}
-		});
 
 		ExitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

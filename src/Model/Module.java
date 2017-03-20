@@ -1,10 +1,7 @@
 package Model;
 
-import com.google.ortools.constraintsolver.DecisionBuilder;
 import com.google.ortools.constraintsolver.IntVar;
 import com.google.ortools.constraintsolver.Solver;
-
-import View.TimeTableCreatorFileCohortView;
 
 public class Module {
 
@@ -46,33 +43,13 @@ public class Module {
 				timetable[i][j] = timetable_Flatten[i * N_HOURS + j];
 			}
 		}
-		
-		
-
-		//
-		// constraints
-		//
 
 		// Constraint to constrain the total hours of a module to the timetable
 		solver.addConstraint(solver.makeSumEquality(timetable_Flatten, totalHours));
 
 		// Constraint to constrain the introduction hours of a module to the
-		// first row of the timetable
 		solver.addConstraint(solver.makeSumEquality(timetable[0], introHours));
-		
-//		
-//		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
-//		solver.newSearch(db);
-//		solver.nextSolution();
-//		for (int k = 0; k < N_DAYS; k++) {
-//			for (int l = 0; l < N_HOURS; l++) {
-//				System.out.print(timetable[k][l].value() + " ");
-//
-//			}
-//
-//			System.out.println();
-//
-//		}
+
 	}
 
 	// getter for the module code of a module
@@ -99,7 +76,6 @@ public class Module {
 	public IntVar[][] getTimetable() {
 
 		return timetable;
-		
 
 	}
 

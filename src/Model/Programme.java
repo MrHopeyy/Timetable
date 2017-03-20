@@ -1,12 +1,12 @@
 package Model;
 
-import java.util.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 import com.google.ortools.constraintsolver.DecisionBuilder;
 import com.google.ortools.constraintsolver.IntVar;
 import com.google.ortools.constraintsolver.Solver;
-
-import View.TimeTableCreatorFileCohortView;
 
 public class Programme {
 
@@ -19,12 +19,12 @@ public class Programme {
 	// Variable int for how many days in a week.
 	public static int N_DAYS = 4;
 	// Creating the 2d array for the timetable.
-	IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
+	public IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
 	// Creating the an array list for the module objects sourced form the main class.
 	ArrayList<String> module_codes = new ArrayList<String>();
 	
 	private IntVar[] timetable_Flatten;
-
+	
 	public Programme(int nModulesInProgramme, Solver solver) {
 
 		module_codes.add("BREAK");
@@ -62,30 +62,36 @@ public class Programme {
 
 	}
 
-	public IntVar[][] generateTimetable(Solver solver) {
+	public IntVar[][] generateTimetable(Solver solver) throws IOException {
 
 		// Timetable Flatten is a 1d array of timetable.
 
 		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
 		solver.newSearch(db);
 		solver.nextSolution();
+		
+		//FileWriter textOutput = new FileWriter("output.txt");
+
+		
 		for (int k = 0; k < N_DAYS; k++) {
 			for (int l = 0; l < N_HOURS; l++) {
+				
 				//System.out.print(timetable[k][l].value() + " ");
+				System.out.print(module_codes.get((int) timetable[k][l].value()) + " ");
+				//textOutput.write(module_codes.get((int) timetable[k][l].value()) + " ");
 				
-				IntVar value = timetable[k][l];
-				module_codes.get((int) value.value());
-				System.out.print(module_codes.get((int) value.value()) + " ");
-				
-
 			}
 
 			System.out.println();
+			//textOutput.write("\r\n");
 
 		}
-
+		
+		//textOutput.close();
+		
 		return timetable;
 
 	}
+	
 
 }
