@@ -52,27 +52,28 @@ public class Module {
 
 	}
 
-	// getter for the module code of a module
+	// Getter for the module code of a module
 	public String getModuleCode() {
 
 		return Module_Code;
 
 	}
 
-	// getter for the intro hours of a module
+	// Getter for the intro hours of a module
 	public int getIntroHours() {
 
 		return introHours;
 
 	}
 
-	// getter for the total hours of a module
+	// Getter for the total hours of a module
 	public int getTotalHours() {
 
 		return totalHours;
 
 	}
 
+	// Getter for the module timetable
 	public IntVar[][] getTimetable() {
 
 		return timetable;

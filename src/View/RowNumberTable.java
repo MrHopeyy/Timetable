@@ -1,7 +1,6 @@
 package View;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -12,6 +11,7 @@ import javax.swing.table.*;
  *  This table must be added to the row header of the scrollpane that
  *  contains the main table.
  */
+@SuppressWarnings("serial")
 public class RowNumberTable extends JTable
 	implements ChangeListener, PropertyChangeListener, TableModelListener
 {
