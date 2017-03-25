@@ -1,6 +1,5 @@
 package Model;
 
-//import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import com.google.ortools.constraintsolver.DecisionBuilder;
@@ -19,21 +18,20 @@ public class Programme {
 	public static int N_DAYS = 4;
 	// Creating the 2d array for the timetable.
 	public IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
-	// Creating the an array list for the module objects soured form the main
-	// class.
-	ArrayList<String> module_codes = new ArrayList<String>();
+	// Creating the an array list for the module objects soured form the main class.
+	public ArrayList<String> module_codes = new ArrayList<String>();
 	// Creating a IntVar array
 	private IntVar[] timetable_Flatten;
 
 	public Programme(int nModulesInProgramme, Solver solver) {
 
-		// Adding a blank break into the module codes arraylist
+		// Adding a blank break into the module codes array list
 		module_codes.add("BREAK");
 
 		// Initialising the timetable flatten array
 		timetable_Flatten = solver.makeIntVarArray(N_DAYS * N_HOURS, 0, nModulesInProgramme);
 
-		// Flattening the timetable 2d array into the timetable flattend array
+		// Flattening the timetable 2d array into the timetable flattened array
 		for (int i = 0; i < N_DAYS; i++) {
 			for (int j = 0; j < N_HOURS; j++) {
 				// Creating the flattened version of the timetable array.
@@ -72,37 +70,13 @@ public class Programme {
 
 	public IntVar[][] generateTimetable(Solver solver) throws IOException {
 
-		// Creating a decision builder to solve all the constrain that have been
-		// made
+		// Creating a decision builder to solve all the constrain that have been made
 		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
 		// Making a new search
 		solver.newSearch(db);
 		// Looking for next solution
 		solver.nextSolution();
-
-		// FileWriter textOutput = new FileWriter("output.txt");
-
-		// For the length of the timetable
-		for (int k = 0; k < N_DAYS; k++) {
-			for (int l = 0; l < N_HOURS; l++) {
-
-				// Print the elements of the array to there string counterparts
-				// System.out.print(timetable[k][l].value() + " ");
-				System.out.print(module_codes.get((int) timetable[k][l].value()) + " ");
-
-				// textOutput.write(module_codes.get((int)
-				// timetable[k][l].value()) + " ");
-
-			}
-
-			System.out.println();
-			// textOutput.write("\r\n");
-
-		}
-
-		// textOutput.close();
 		
-		// Returning the timetable array
 		return timetable;
 
 	}

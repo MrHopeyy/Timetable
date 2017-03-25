@@ -1,9 +1,10 @@
-package Model;
+package Tests;
 
+import com.google.ortools.constraintsolver.DecisionBuilder;
 import com.google.ortools.constraintsolver.IntVar;
 import com.google.ortools.constraintsolver.Solver;
 
-public class Module {
+public class ModuleTestClass {
 
 	// Loads the library for the constrain tools
 	static {
@@ -21,9 +22,9 @@ public class Module {
 	// Int for the amount of total hours a module wants.
 	private int totalHours;
 	// Creating a 2d array of type IntVar
-	private IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
+	private static IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
 
-	public Module(Solver solver, String Module_Code, int introHours, int totalHours) {
+	public ModuleTestClass(Solver solver, String Module_Code, int introHours, int totalHours) {
 
 		// initialising the variables of the object
 		this.Module_Code = Module_Code;
@@ -49,7 +50,6 @@ public class Module {
 
 		// Constraint to constrain the introduction hours of a module to the
 		solver.addConstraint(solver.makeSumEquality(timetable[0], introHours));
-		
 
 	}
 
@@ -78,6 +78,45 @@ public class Module {
 	public IntVar[][] getTimetable() {
 
 		return timetable;
+
+	}
+
+	// solver
+	public static void solve() {
+
+		Solver solver = new Solver("Module");
+
+		// Timetable Flatten is a 1d array of timetable.
+		IntVar[] timetable_Flatten = solver.makeBoolVarArray(N_DAYS * N_HOURS);
+
+		// For loop to create the length and width of the timetable array.
+		for (int i = 0; i < N_DAYS; i++) {
+			for (int j = 0; j < N_HOURS; j++) {
+
+				// Creating the flattened version of the timetable array.
+				timetable[i][j] = timetable_Flatten[i * N_HOURS + j];
+			}
+		}
+
+
+		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
+		solver.newSearch(db);
+		solver.nextSolution();
+		for (int i = 0; i < N_DAYS; i++) {
+			for (int j = 0; j < N_HOURS; j++) {
+				System.out.print(timetable[i][j].value() + " ");
+
+			}
+
+			System.out.println();
+
+		}
+
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		ModuleTestClass.solve();
 
 	}
 

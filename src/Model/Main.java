@@ -5,8 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import com.google.ortools.constraintsolver.Solver;
 
+import com.google.ortools.constraintsolver.IntVar;
+import com.google.ortools.constraintsolver.Solver;
 import View.TimeTableCreatorFileCohortView;
 import View.TimeTableCreatorFileModuleView;
 
@@ -119,15 +120,13 @@ public class Main {
 		// For the length of the programme data array
 		for (int i = 0; i < programme_Data.length; i++) {
 
-			// For the size of the module arraylist
+			// For the size of the module array list
 			for (int a = 0; a < modules.size(); a++) {
 
-				// if the programme string element matches the first element in
-				// module
+				// if the programme string element matches the first element in module
 				if (programme_Data[i].equals(modules.get(a).getModuleCode())) {
 
-					// Add that module to the add module method in programme
-					// class
+					// Add that module to the add module method in programme class
 					prog.addModule(solver, modules.get(a));
 
 				} else {
@@ -141,7 +140,7 @@ public class Main {
 		return prog;
 	}
 
-	public static void solve() throws IOException {
+	public static IntVar[][] solve() throws IOException {
 
 		// Creating a new solver object
 		Solver solver = new Solver("Timetable");
@@ -151,8 +150,7 @@ public class Main {
 		String[] programme_data = importCohort();
 		// Creating a programme object
 		Programme programme = makeProgramme(solver, modules, programme_data);
-		// Running the project
-		programme.generateTimetable(solver);
+		return programme.generateTimetable(solver);
 
 	}
 

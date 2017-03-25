@@ -10,75 +10,34 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.print.PrinterException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
 import com.google.ortools.constraintsolver.IntVar;
+import java.util.*;
+import com.google.ortools.constraintsolver.DecisionBuilder;
 import com.google.ortools.constraintsolver.Solver;
 
 import Model.Main;
 import Model.Module;
 import Model.Programme;
-
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
 
 public class TimeTableCreatorTableView {
 
@@ -87,10 +46,13 @@ public class TimeTableCreatorTableView {
 	public final static int N_HOURS = 10;
 	// Variable int for how many days in a week.
 	public final static int N_DAYS = 4;
+	// Initialising the buffered Reader
 	public static BufferedReader br = null;
 	public static String line = "";
 	public static String line2 = " ";
 	public static String cvsSplitBy = ",";
+	private ArrayList<String> module_codes = new ArrayList<String>();
+
 
 	/*
 	 * constructor for the menuView
@@ -106,10 +68,11 @@ public class TimeTableCreatorTableView {
 	 * 
 	 * @throws IOException
 	 */
+	@SuppressWarnings("static-access")
 	public JPanel buildTimeTableCreatorMenu() throws IOException {
 
-		final int blankSpace = 6; // blank at edge of panels
-
+		module_codes.add("BREAK");
+		
 		try {
 			mainPanel = (JPanel) createContent();
 
@@ -131,18 +94,114 @@ public class TimeTableCreatorTableView {
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		label1.setVerticalTextPosition(JLabel.CENTER);
 		label1.setHorizontalTextPosition(JLabel.CENTER);
+		
+		/////////////////////////////////////////////////////////////
+		
+		// Retrieving the file path from TimeTableCreatorFileModuleView
+				String csvFile2 = TimeTableCreatorFileModuleView.ModulePath;
+				// Creating an array list for storing the Modules
+				ArrayList<String> modules = new ArrayList<String>();
+
+				// Reading the file line by line, splitting by comma and storing the
+				// segments into a new module object
+				try {
+
+					br = new BufferedReader(new FileReader(csvFile2));
+					while ((line = br.readLine()) != null) {
+
+						// Storing the line
+						String[] moduleArray = line.split(cvsSplitBy);
+
+						// Storing the elements into a new module object
+						modules.add(moduleArray[0]);
+
+					}
+
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (br != null) {
+						try {
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				// Reading the file path from TimeTableCreatorFileCohortView
+				String csvFile = TimeTableCreatorFileCohortView.CohortPath;
+				// Creating an array for storing the line of programmes
+				String[] programme_Data = null;
+
+				// Reading the file line by line
+				try {
+
+					br = new BufferedReader(new FileReader(csvFile));
+					while ((line = br.readLine()) != null) {
+
+						// Storing the line into the array
+						programme_Data = line.split(cvsSplitBy);
+					}
+
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (br != null) {
+						try {
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				// For the length of the programme data array
+				for (int i = 0; i < programme_Data.length; i++) {
+
+					// For the size of the module array list
+					for (int a = 0; a < modules.size(); a++) {
+
+						// if the programme string element matches the first element in module
+						if (programme_Data[i].equals(modules.get(a))) {
+
+							// Add that module to the add module method in programme class
+							module_codes.add(modules.get(a));
+							
+						} else {
+
+						}
+					}
+
+				}
+		
+		/////////////////////////////////////////////////////////////
 
 		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
 				"18:00" };
-		Object[][] rowData = { { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "1", "1", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-				{ "0", "0", "0", "2", "2", "0", "0", "0", "0", "0" } };
+		
+		IntVar[][] rowData = Main.solve();
+		
+		Object[][] intArray = new Object[rowData.length][];
+		for(int p = 0; p < rowData.length; p++){
+		    intArray[p] = new Object[rowData[p].length];
+		    for(int j = 0; j < rowData[p].length; j++){
+		    	
+		       intArray[p][j] = module_codes.get((int) rowData[p][j].value());
 
-		JTable mainTable = new JTable(rowData, columnNames);
+		    }
+		}
+		
+		Arrays.toString(module_codes.toArray());
+		
+		JTable mainTable = new JTable(intArray, columnNames);
 		mainTable.setEnabled(false);
 		JScrollPane scrollPane = new JScrollPane(mainTable);
-		scrollPane.setPreferredSize(new Dimension(500, 100));
+		scrollPane.setPreferredSize(new Dimension(600, 100));
 		JTable rowTable = new RowNumberTable(mainTable);
 		rowTable.setOpaque(false);
 		scrollPane.setRowHeaderView(rowTable);
@@ -164,8 +223,6 @@ public class TimeTableCreatorTableView {
 			center.setLayout(thisLayout);
 			center.setOpaque(false);
 			center.add(scrollPane, gbc);
-
-			Border thickBorder = new LineBorder(Color.BLACK, 4);
 			/**
 			 * creating the buttons for the panel
 			 */
@@ -192,7 +249,7 @@ public class TimeTableCreatorTableView {
 				printCVSButton = new JButton();
 				printCVSButton.setForeground(Color.BLACK);
 				printCVSButton.setPreferredSize(new Dimension(100, 35));
-				printCVSButton.setText("Save to .CVS");
+				printCVSButton.setText("Save to .CSV");
 				printCVSButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				printCVSButton.setHorizontalTextPosition(JButton.CENTER);
 				printCVSButton.setVerticalTextPosition(JButton.CENTER);
@@ -278,10 +335,10 @@ public class TimeTableCreatorTableView {
 				} else {
 
 					StringBuilder builder = new StringBuilder();
-					for (int i = 0; i < rowData.length; i++) {
-						for (int j = 0; j < rowData[i].length; j++) {
-							builder.append(rowData[i][j] + "");
-							if (j < rowData[i].length - 1)
+					for (int i = 0; i < intArray.length; i++) {
+						for (int j = 0; j < intArray[i].length; j++) {
+							builder.append(intArray[i][j] + "");
+							if (j < intArray[i].length - 1)
 								builder.append(" ");
 						}
 						builder.append("\n");
@@ -311,10 +368,10 @@ public class TimeTableCreatorTableView {
 				}
 
 				StringBuilder builder = new StringBuilder();
-				for (int i = 0; i < rowData.length; i++) {
-					for (int j = 0; j < rowData[i].length; j++) {
-						builder.append(rowData[i][j] + "");
-						if (j < rowData[i].length - 1)
+				for (int i = 0; i < intArray.length; i++) {
+					for (int j = 0; j < intArray[i].length; j++) {
+						builder.append(intArray[i][j] + "");
+						if (j < intArray[i].length - 1)
 							builder.append(" ");
 					}
 					builder.append("\n");
@@ -349,10 +406,12 @@ public class TimeTableCreatorTableView {
 		printCVSButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				
+				
 				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 				Date dateobj = new Date();
 
-				File file = new File("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".cvs");
+				File file = new File("/Users/AlexHope/TimeTable " + df.format(dateobj) + ".csv");
 
 				if (!file.exists()) {
 					try {
@@ -364,10 +423,10 @@ public class TimeTableCreatorTableView {
 				} else {
 
 					StringBuilder builder = new StringBuilder();
-					for (int i = 0; i < rowData.length; i++) {
-						for (int j = 0; j < rowData[i].length; j++) {
-							builder.append(rowData[i][j] + "");
-							if (j < rowData[i].length - 1)
+					for (int i = 0; i < intArray.length; i++) {
+						for (int j = 0; j < intArray[i].length; j++) {
+							builder.append(intArray[i][j] + "");
+							if (j < intArray[i].length - 1)
 								builder.append(" ");
 						}
 						builder.append("\n");
@@ -397,10 +456,10 @@ public class TimeTableCreatorTableView {
 				}
 
 				StringBuilder builder = new StringBuilder();
-				for (int i = 0; i < rowData.length; i++) {
-					for (int j = 0; j < rowData[i].length; j++) {
-						builder.append(rowData[i][j] + "");
-						if (j < rowData[i].length - 1)
+				for (int i = 0; i < intArray.length; i++) {
+					for (int j = 0; j < intArray[i].length; j++) {
+						builder.append(intArray[i][j] + "");
+						if (j < intArray[i].length - 1)
 							builder.append(" ");
 					}
 					builder.append("\n");
@@ -442,6 +501,7 @@ public class TimeTableCreatorTableView {
 	private Component createContent() throws IOException {
 		final ImageIcon icon = new ImageIcon(this.getClass().getResource("/Files/background.jpg"));
 
+		@SuppressWarnings("serial")
 		JPanel panel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

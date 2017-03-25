@@ -12,6 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -34,11 +35,14 @@ public class TimeTableCreatorFileCohortView {
 	private JPanel mainPanel;
 	// Creating a global variable for the file path
 	public static String CohortPath;
+	// Initialising the buffered Reader
+	public static BufferedReader br = null;
 
 	/*
-	 * constructor for the menuView
+	 * constructor for the TimeTableCreatorFileCohortView
 	 */
 	public TimeTableCreatorFileCohortView() {
+		
 
 	}
 
@@ -72,7 +76,7 @@ public class TimeTableCreatorFileCohortView {
 		// Setting the text area to not be editable
 		textArea.setEditable(false);
 
-		// Creating a scrollpane to store the text area
+		// Creating a scroll pane to store the text area
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		// Setting the scroll pane to always show the vertical scroll bar
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -210,11 +214,10 @@ public class TimeTableCreatorFileCohortView {
 
 				// Removing all of the contents of the panel
 				MainFrame.mainFrame.getContentPane().removeAll();
-
 				// Creating a new instance of TimeTableCreatorFileModuleView
 				TimeTableCreatorFileModuleView gov = new TimeTableCreatorFileModuleView();
-
 				// Adding the instance of the new panel to the main frame
+				
 				try {
 					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
 				} catch (IOException e1) {
@@ -224,13 +227,10 @@ public class TimeTableCreatorFileCohortView {
 
 				// Repainting the frame
 				MainFrame.mainFrame.repaint();
-
 				// Revalidating the frame
 				MainFrame.mainFrame.revalidate();
-
 				// Setting cohort path to null
 				CohortPath = null;
-
 				// Setting the module path to null
 				TimeTableCreatorFileModuleView.ModulePath = null;
 
@@ -245,11 +245,10 @@ public class TimeTableCreatorFileCohortView {
 
 					// Remove all of the contents of the frame
 					MainFrame.mainFrame.getContentPane().removeAll();
-
 					// Creating a new instance of TimeTableCreatorTableView
 					TimeTableCreatorTableView gov = new TimeTableCreatorTableView();
-
 					// Adding the instance of the new panel to the frame
+					
 					try {
 						MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
 					} catch (IOException e2) {
@@ -259,17 +258,8 @@ public class TimeTableCreatorFileCohortView {
 
 					// Repainting the frame
 					MainFrame.mainFrame.repaint();
-
-					// revalidating the frame
+					// Revalidating the frame
 					MainFrame.mainFrame.revalidate();
-
-					// Running the model
-					try {
-						Main.solve();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 
 				} else {
 
@@ -290,7 +280,7 @@ public class TimeTableCreatorFileCohortView {
 				// Creating a new file chooser
 				JFileChooser ModulefileChooser = new JFileChooser(userhome + "\\Documets");
 				// Creating a filter for the file type of the file chooser
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "cvs");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "csv");
 				// Adding the filter
 				ModulefileChooser.setFileFilter(filter);
 				// Removing the option to look for all file types
@@ -307,13 +297,10 @@ public class TimeTableCreatorFileCohortView {
 					CohortPath = ModulefileChooser.getSelectedFile().getAbsolutePath().toString();
 
 				}
-
 				// Setting the file chooser to be transparent
 				ModulefileChooser.setOpaque(false);
-
 				// Setting the file reader to be null
 				FileReader reader = null;
-
 				// Reading the file that was selected by the file path
 				try {
 					reader = new FileReader(CohortPath);
