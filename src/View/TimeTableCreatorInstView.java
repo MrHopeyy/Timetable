@@ -69,9 +69,11 @@ public class TimeTableCreatorInstView {
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
 		// Creating a new text area and setting the text
-		jTextArea1 = new JTextArea("This is an editable JTextArea. " + "A text area is a \"plain\" text component, "
-				+ "which means that although it can display text "
-				+ "in any font, all of the text is in the same font.");
+		jTextArea1 = new JTextArea("To make a new timetable, you require two files:"
+				+ "\n\n"
+				+ "- A file containing modules with there module code, intro hours and total hours."
+				+ "\n\n"
+				+ "- A file containing the module codes that you with to populate the timetable with");
 
 		// Setting the foreground colour to black
 		jTextArea1.setForeground(Color.BLACK);
@@ -124,11 +126,11 @@ public class TimeTableCreatorInstView {
 				// Setting the foreground colour of the button to black
 				backButton.setForeground(Color.BLACK);
 				// Setting the size of the button
-				backButton.setPreferredSize(new Dimension(250, 50));
+				backButton.setPreferredSize(new Dimension(100, 35));
 				// Setting the text of the button
 				backButton.setText("Back to Menu");
 				// Setting the font and size of the button text
-				backButton.setFont(new Font("Arial", Font.BOLD, 24));
+				backButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				// Setting the text position of the button
 				backButton.setHorizontalTextPosition(JButton.CENTER);
 				// Setting the text position of the button

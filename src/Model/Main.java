@@ -25,10 +25,6 @@ public class Main {
 	public static String line2 = " ";
 	// Creating a variable to split by line space
 	public static String cvsSplitBy = ",";
-	// Variable int for the length of a single day.
-	public final static int N_HOURS = 10;
-	// Variable int for how many days in a week.
-	public final static int N_DAYS = 4;
 
 	public Main() {
 

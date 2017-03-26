@@ -13,7 +13,7 @@ public class Module {
 	// Variable int for the length of a single day.
 	public final static int N_HOURS = 10;
 	// Variable int for how many days in a week.
-	public final static int N_DAYS = 4;
+	public final static int N_DAYS = 5;
 	// String for the module code of the object.
 	private String Module_Code;
 	// Int for the amount of intro hours a module wants.

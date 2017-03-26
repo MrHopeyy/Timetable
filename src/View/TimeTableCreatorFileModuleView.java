@@ -187,7 +187,18 @@ public class TimeTableCreatorFileModuleView {
 			// Adding the scroll pane to centre
 			center.add(scrollPane, gbc);
 			// Adding the open button to centre
-			center.add(openButton, gbc);
+			// center.add(openButton, gbc);
+
+			// Creating a new panel
+			JPanel fileBox = new JPanel();
+			// Setting the panel to be transparent
+			fileBox.setOpaque(false);
+			// Adding a button to the panel
+			fileBox.setLayout(new FlowLayout());
+			// Adding a button to the panel
+			fileBox.add(openButton, gbc);
+			// Adding the panel into the panel
+			center.add(fileBox, gbc);
 
 			// Creating a new panel
 			JPanel titleBox = new JPanel();
@@ -270,7 +281,7 @@ public class TimeTableCreatorFileModuleView {
 				// Creating a new file chooser
 				JFileChooser ModulefileChooser = new JFileChooser(userhome + "\\Documets");
 				// Creating a filter for the file type of the file chooser
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "csv");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "csv", "rtf", "docx");
 				// Adding the filter
 				ModulefileChooser.setFileFilter(filter);
 				// Removing the option to look for all file types
@@ -308,7 +319,7 @@ public class TimeTableCreatorFileModuleView {
 
 			}
 		});
-		
+
 		// Returning the panel
 		return mainPanel;
 
@@ -318,7 +329,7 @@ public class TimeTableCreatorFileModuleView {
 	 * used to create the background image for the panel
 	 */
 	private Component createContent() throws IOException {
-		
+
 		// Setting the background image of the pane;
 		final ImageIcon icon = new ImageIcon(this.getClass().getResource("/Files/background.jpg"));
 
@@ -326,13 +337,13 @@ public class TimeTableCreatorFileModuleView {
 		JPanel panel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
-				
+
 				// Paining the background image
 				super.paintComponent(g);
 				g.drawImage(icon.getImage(), 0, 0, null);
 			}
 		};
-		
+
 		// Returning the panel
 		return panel;
 	}

@@ -27,8 +27,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import Model.Main;
-
 public class TimeTableCreatorFileCohortView {
 
 	// Creating the panel
@@ -42,7 +40,6 @@ public class TimeTableCreatorFileCohortView {
 	 * constructor for the TimeTableCreatorFileCohortView
 	 */
 	public TimeTableCreatorFileCohortView() {
-		
 
 	}
 
@@ -181,7 +178,17 @@ public class TimeTableCreatorFileCohortView {
 			// Adding the scroll pane to centre
 			center.add(scrollPane, gbc);
 			// Adding the open button to centre
-			center.add(openButton, gbc);
+
+			// Creating a new panel
+			JPanel fileBox = new JPanel();
+			// Setting the panel to be transparent
+			fileBox.setOpaque(false);
+			// Adding a button to the panel
+			fileBox.setLayout(new FlowLayout());
+			// Adding a button to the panel
+			fileBox.add(openButton, gbc);
+			// Adding the panel into the panel
+			center.add(fileBox, gbc);
 
 			// Creating a new panel
 			JPanel titleBox = new JPanel();
@@ -217,7 +224,7 @@ public class TimeTableCreatorFileCohortView {
 				// Creating a new instance of TimeTableCreatorFileModuleView
 				TimeTableCreatorFileModuleView gov = new TimeTableCreatorFileModuleView();
 				// Adding the instance of the new panel to the main frame
-				
+
 				try {
 					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
 				} catch (IOException e1) {
@@ -248,7 +255,7 @@ public class TimeTableCreatorFileCohortView {
 					// Creating a new instance of TimeTableCreatorTableView
 					TimeTableCreatorTableView gov = new TimeTableCreatorTableView();
 					// Adding the instance of the new panel to the frame
-					
+
 					try {
 						MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
 					} catch (IOException e2) {
@@ -280,7 +287,7 @@ public class TimeTableCreatorFileCohortView {
 				// Creating a new file chooser
 				JFileChooser ModulefileChooser = new JFileChooser(userhome + "\\Documets");
 				// Creating a filter for the file type of the file chooser
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "csv");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "csv", "rtf", "docx");
 				// Adding the filter
 				ModulefileChooser.setFileFilter(filter);
 				// Removing the option to look for all file types

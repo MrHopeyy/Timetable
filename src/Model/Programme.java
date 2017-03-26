@@ -12,12 +12,8 @@ public class Programme {
 		System.loadLibrary("jniortools");
 	}
 
-	// Variable int for the length of a single day.
-	public static int N_HOURS = 10;
-	// Variable int for how many days in a week.
-	public static int N_DAYS = 4;
 	// Creating the 2d array for the timetable.
-	public IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
+	public IntVar[][] timetable = new IntVar[Module.N_DAYS][Module.N_HOURS];
 	// Creating the an array list for the module objects soured form the main class.
 	public ArrayList<String> module_codes = new ArrayList<String>();
 	// Creating a IntVar array
@@ -29,13 +25,13 @@ public class Programme {
 		module_codes.add("BREAK");
 
 		// Initialising the timetable flatten array
-		timetable_Flatten = solver.makeIntVarArray(N_DAYS * N_HOURS, 0, nModulesInProgramme);
+		timetable_Flatten = solver.makeIntVarArray(Module.N_DAYS * Module.N_HOURS, 0, nModulesInProgramme);
 
 		// Flattening the timetable 2d array into the timetable flattened array
-		for (int i = 0; i < N_DAYS; i++) {
-			for (int j = 0; j < N_HOURS; j++) {
+		for (int i = 0; i < Module.N_DAYS; i++) {
+			for (int j = 0; j < Module.N_HOURS; j++) {
 				// Creating the flattened version of the timetable array.
-				timetable[i][j] = timetable_Flatten[i * N_HOURS + j];
+				timetable[i][j] = timetable_Flatten[i * Module.N_HOURS + j];
 			}
 		}
 
