@@ -35,22 +35,174 @@ import Model.Main;
 public class TimeTableCreatorTableView {
 
 	private JPanel mainPanel;
-	// Initialising the buffered Reader// Initialising the buffered Reader
-	public static BufferedReader br = null;
-	// Creating a variable to split by space
-	public static String line = "";
-	// Creating a variable to split by white space
-	public static String line2 = " ";
-	// Creating a variable to split by line space
-	public static String cvsSplitBy = ",";
-	// Creating an array list to store module code strings
-	private ArrayList<String> module_codes = new ArrayList<String>();
 
 	/*
 	 * constructor for the menuView
 	 */
 
 	public TimeTableCreatorTableView() {
+
+	}
+
+	public ArrayList<String> importModulesNames() {
+
+		// Initialising the buffered Reader
+		BufferedReader br = null;
+		// Creating a variable to split by space
+		String line = "";
+		// Creating a variable to split by white space
+		@SuppressWarnings("unused")
+		String line2 = " ";
+		// Creating a variable to split by line space
+		String cvsSplitBy = ",";
+
+		// Retrieving the file path from TimeTableCreatorFileModuleView
+		String csvFile2 = TimeTableCreatorFileModuleView.ModulePath;
+		// Creating an array list for storing the Modules
+		ArrayList<String> modules = new ArrayList<String>();
+
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile2));
+			while ((line = br.readLine()) != null) {
+
+				// Storing the line
+				String[] moduleArray = line.split(cvsSplitBy);
+
+				// Storing the elements into a new module object
+				modules.add(moduleArray[0]);
+
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return modules;
+	}
+
+	public static String[] importCohortNames() {
+
+		// Initialising the buffered Reader
+		BufferedReader br = null;
+		// Creating a variable to split by space
+		String line = "";
+		// Creating a variable to split by white space
+		@SuppressWarnings("unused")
+		String line2 = " ";
+		// Creating a variable to split by line space
+		String cvsSplitBy = ",";
+		// Creating an array list to store module code strings
+		ArrayList<String> module_codes = new ArrayList<String>();
+		// Adding a break inside the module codes array
+		module_codes.add("BREAK");
+		// Reading the file path from TimeTableCreatorFileCohortView
+		String csvFile = TimeTableCreatorFileCohortView.CohortPath;
+		// Creating an array for storing the line of programmes
+		String[] programme_Data = null;
+
+		// Reading the file line by line
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+
+				// Storing the line into the array
+				programme_Data = line.split(cvsSplitBy);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return programme_Data;
+
+	}
+
+	public Object[][] moduleCodeNameGenerator(String[] importCohortNames, ArrayList<String> importModulesNames)
+			throws IOException {
+
+		// Creating an array list to store module code strings
+		ArrayList<String> module_codes = new ArrayList<String>();
+		// Adding a break inside the module codes array
+		module_codes.add("BREAK");
+
+		// For the length of the programme data array
+		for (int i = 0; i < importCohortNames.length; i++) {
+
+			// For the size of the module array list
+			for (int a = 0; a < importModulesNames.size(); a++) {
+
+				// if the programme string element matches the first element in
+				// module
+				if (importCohortNames[i].equals(importModulesNames.get(a))) {
+
+					// Add that module to the add module method in programme
+					// class
+					module_codes.add(importModulesNames.get(a));
+
+				} else {
+
+				}
+			}
+
+		}
+
+		// Running the model and storing result into a 2d array
+		IntVar[][] rowData = null;
+		try {
+			rowData = Main.solve();
+		} catch (Exception e) {
+
+			JOptionPane.showMessageDialog(mainPanel, "The one or more wrong files are being used! Please try again.",
+					null, JOptionPane.PLAIN_MESSAGE);
+
+		}
+
+		try {
+			// Creating a new array for converting the array type
+			Object[][] moduleNameArrayGenerated = new Object[rowData.length][];
+			for (int p = 0; p < rowData.length; p++) {
+				moduleNameArrayGenerated[p] = new Object[rowData[p].length];
+				for (int j = 0; j < rowData[p].length; j++) {
+
+					// Getting the string version of the course code
+					moduleNameArrayGenerated[p][j] = module_codes.get((int) rowData[p][j].value());
+
+				}
+
+			}
+
+			return moduleNameArrayGenerated;
+
+		} catch (Exception e) {
+
+			JOptionPane.showMessageDialog(mainPanel, "Files are not matched! Please try again.", null,
+					JOptionPane.PLAIN_MESSAGE);
+
+			return null;
+
+		}
 
 	}
 
@@ -61,9 +213,6 @@ public class TimeTableCreatorTableView {
 	 */
 	@SuppressWarnings("static-access")
 	public JPanel buildTimeTableCreatorMenu() throws IOException {
-
-		// Adding a break inside the module codes array
-		module_codes.add("BREAK");
 
 		try {
 			// Creating the contents for the panel
@@ -94,118 +243,29 @@ public class TimeTableCreatorTableView {
 		// Setting the position of the label
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
-		/////////////////////////////////////////////////////////////
-		// To be removed as this is duplicated code from another class
+		// Creating a string array of the column names
+		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00" };
+		Object[][] rowData = { { "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" } };
 
-		// Retrieving the file path from TimeTableCreatorFileModuleView
-		String csvFile2 = TimeTableCreatorFileModuleView.ModulePath;
-		// Creating an array list for storing the Modules
-		ArrayList<String> modules = new ArrayList<String>();
+		Object[][] moduleCodeNameGenerator = moduleCodeNameGenerator(importCohortNames(), importModulesNames());
+		JTable mainTable;
 
-		// Reading the file line by line, splitting by comma and storing the
-		// segments into a new module object
-		try {
+		if (moduleCodeNameGenerator == null) {
 
-			br = new BufferedReader(new FileReader(csvFile2));
-			while ((line = br.readLine()) != null) {
+			JOptionPane.showMessageDialog(mainPanel, "Timetable not generated!", null, JOptionPane.PLAIN_MESSAGE);
+			mainTable = new JTable(rowData, columnNames);
 
-				// Storing the line
-				String[] moduleArray = line.split(cvsSplitBy);
+		} else {
 
-				// Storing the elements into a new module object
-				modules.add(moduleArray[0]);
-
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		// Reading the file path from TimeTableCreatorFileCohortView
-		String csvFile = TimeTableCreatorFileCohortView.CohortPath;
-		// Creating an array for storing the line of programmes
-		String[] programme_Data = null;
-
-		// Reading the file line by line
-		try {
-
-			br = new BufferedReader(new FileReader(csvFile));
-			while ((line = br.readLine()) != null) {
-
-				// Storing the line into the array
-				programme_Data = line.split(cvsSplitBy);
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		// For the length of the programme data array
-		for (int i = 0; i < programme_Data.length; i++) {
-
-			// For the size of the module array list
-			for (int a = 0; a < modules.size(); a++) {
-
-				// if the programme string element matches the first element in
-				// module
-				if (programme_Data[i].equals(modules.get(a))) {
-
-					// Add that module to the add module method in programme
-					// class
-					module_codes.add(modules.get(a));
-
-				} else {
-
-				}
-			}
+			mainTable = new JTable(moduleCodeNameGenerator(importCohortNames(), importModulesNames()), columnNames);
 
 		}
 
-		/////////////////////////////////////////////////////////////
-
-		// Setting the column names of the table
-		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
-				"18:00" };
-
-		// Running the model and storing result into a 2d array
-		IntVar[][] rowData = Main.solve();
-
-		// Creating a new array for converting the array type
-		Object[][] intArray = new Object[rowData.length][];
-		for (int p = 0; p < rowData.length; p++) {
-			intArray[p] = new Object[rowData[p].length];
-			for (int j = 0; j < rowData[p].length; j++) {
-
-				// Getting the string version of the course code
-				intArray[p][j] = module_codes.get((int) rowData[p][j].value());
-
-			}
-		}
-
-		// Creating the table for storing the results of the model
-		JTable mainTable = new JTable(intArray, columnNames);
 		// Setting the table to not be editable
 		mainTable.setEnabled(false);
+
 		// Creating a scroll pane to store the table
 		JScrollPane scrollPane = new JScrollPane(mainTable);
 		// Setting the size of the scroll pane
@@ -221,16 +281,12 @@ public class TimeTableCreatorTableView {
 		scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
 		// Setting the row table to not be editable
 		scrollPane.setEnabled(false);
-		
-		String[] fileExtensions = {
-		         ".txt",
-		         ".csv",
-		         ".rtf",
-		         ".docx",
-		};
-		
+
+		String[] fileExtensions = { ".txt", ".csv", ".rtf", ".docx", };
+
 		JComboBox<String> extensionChoice = new JComboBox<String>(fileExtensions);
-		//String choice = (String) extensionChoice.getSelectedItem().toString();
+		// String choice = (String)
+		// extensionChoice.getSelectedItem().toString();
 
 		try {
 
@@ -316,7 +372,7 @@ public class TimeTableCreatorTableView {
 			fileBox.add(extensionChoice, gbc);
 			// Adding a button to the panel
 			fileBox.add(printTXTButton, gbc);
-			//Adding the panel into the panel
+			// Adding the panel into the panel
 			center.add(fileBox, gbc);
 
 			// Creating a new panel
@@ -392,8 +448,8 @@ public class TimeTableCreatorTableView {
 			public void actionPerformed(ActionEvent e) {
 
 				JFileChooser chooser = new JFileChooser();
-			    chooser.setCurrentDirectory(new File("/home/me/Documents"));
-			    @SuppressWarnings("unused")
+				chooser.setCurrentDirectory(new File("/home/me/Documents"));
+				@SuppressWarnings("unused")
 				int retrival = chooser.showSaveDialog(null);
 				File file = new File(chooser.getSelectedFile() + (String) extensionChoice.getSelectedItem().toString());
 
@@ -407,13 +463,18 @@ public class TimeTableCreatorTableView {
 				} else {
 
 					StringBuilder builder = new StringBuilder();
-					for (int i = 0; i < intArray.length; i++) {
-						for (int j = 0; j < intArray[i].length; j++) {
-							builder.append(intArray[i][j] + ",");
-							if (j < intArray[i].length - 1)
-								builder.append(" ");
+					try {
+						for (int i = 0; i < moduleCodeNameGenerator(importCohortNames(), importModulesNames()).length; i++) {
+							for (int j = 0; j < moduleCodeNameGenerator(importCohortNames(), importModulesNames())[i].length; j++) {
+								builder.append(moduleCodeNameGenerator(importCohortNames(), importModulesNames())[i][j] + ",");
+								if (j < moduleCodeNameGenerator(importCohortNames(), importModulesNames())[i].length - 1)
+									builder.append(" ");
+							}
+							builder.append("\n");
 						}
-						builder.append("\n");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
 					BufferedWriter writer = null;
 					try {
@@ -440,13 +501,18 @@ public class TimeTableCreatorTableView {
 				}
 
 				StringBuilder builder = new StringBuilder();
-				for (int i = 0; i < intArray.length; i++) {
-					for (int j = 0; j < intArray[i].length; j++) {
-						builder.append(intArray[i][j] + ",");
-						if (j < intArray[i].length - 1)
-							builder.append(" ");
+				try {
+					for (int i = 0; i < moduleCodeNameGenerator(importCohortNames(), importModulesNames()).length; i++) {
+						for (int j = 0; j < moduleCodeNameGenerator(importCohortNames(), importModulesNames())[i].length; j++) {
+							builder.append(moduleCodeNameGenerator(importCohortNames(), importModulesNames())[i][j] + ",");
+							if (j < moduleCodeNameGenerator(importCohortNames(), importModulesNames())[i].length - 1)
+								builder.append(" ");
+						}
+						builder.append("\n");
 					}
-					builder.append("\n");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 				BufferedWriter writer = null;
 				try {

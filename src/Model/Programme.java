@@ -27,6 +27,15 @@ public class Programme {
 		// Initialising the timetable flatten array
 		timetable_Flatten = solver.makeIntVarArray(Module.N_DAYS * Module.N_HOURS, 0, nModulesInProgramme);
 
+		solver.addConstraint(
+				solver.makeEquality(timetable_Flatten[0], 0));
+		solver.addConstraint(
+				solver.makeEquality(timetable_Flatten[9], 0));
+		solver.addConstraint(
+				solver.makeEquality(timetable_Flatten[26], 0));
+		solver.addConstraint(
+				solver.makeEquality(timetable_Flatten[35], 0));
+
 		// Flattening the timetable 2d array into the timetable flattened array
 		for (int i = 0; i < Module.N_DAYS; i++) {
 			for (int j = 0; j < Module.N_HOURS; j++) {
@@ -74,6 +83,8 @@ public class Programme {
 		solver.nextSolution();
 		
 		return timetable;
+		
+		
 
 	}
 
