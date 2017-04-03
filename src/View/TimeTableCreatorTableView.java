@@ -97,9 +97,6 @@ public class TimeTableCreatorTableView {
 		BufferedReader br = null;
 		// Creating a variable to split by space
 		String line = "";
-		// Creating a variable to split by white space
-		@SuppressWarnings("unused")
-		String line2 = " ";
 		// Creating a variable to split by line space
 		String cvsSplitBy = ",";
 		// Creating an array list to store module code strings
@@ -142,6 +139,7 @@ public class TimeTableCreatorTableView {
 	public Object[][] moduleCodeNameGenerator(String[] importCohortNames, ArrayList<String> importModulesNames)
 			throws IOException {
 
+
 		// Creating an array list to store module code strings
 		ArrayList<String> module_codes = new ArrayList<String>();
 		// Adding a break inside the module codes array
@@ -174,8 +172,8 @@ public class TimeTableCreatorTableView {
 			rowData = Main.solve();
 		} catch (Exception e) {
 
-			JOptionPane.showMessageDialog(mainPanel, "The one or more wrong files are being used! Please try again.",
-					null, JOptionPane.PLAIN_MESSAGE);
+			//JOptionPane.showMessageDialog(mainPanel, "The one or more wrong files are being used! Please try again.",
+					//null, JOptionPane.PLAIN_MESSAGE);
 
 		}
 
@@ -188,6 +186,7 @@ public class TimeTableCreatorTableView {
 
 					// Getting the string version of the course code
 					moduleNameArrayGenerated[p][j] = module_codes.get((int) rowData[p][j].value());
+					
 
 				}
 
@@ -197,8 +196,8 @@ public class TimeTableCreatorTableView {
 
 		} catch (Exception e) {
 
-			JOptionPane.showMessageDialog(mainPanel, "Files are not matched! Please try again.", null,
-					JOptionPane.PLAIN_MESSAGE);
+			//JOptionPane.showMessageDialog(mainPanel, "Files are not matched! Please try again.", null,
+					//JOptionPane.PLAIN_MESSAGE);
 
 			return null;
 
@@ -247,6 +246,7 @@ public class TimeTableCreatorTableView {
 		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00" };
 		Object[][] rowData = { { "0", "0", "0", "0", "0", "0", "0", "0", "0" },
 				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" },
 				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" } };
 
 		Object[][] moduleCodeNameGenerator = moduleCodeNameGenerator(importCohortNames(), importModulesNames());
@@ -269,7 +269,7 @@ public class TimeTableCreatorTableView {
 		// Creating a scroll pane to store the table
 		JScrollPane scrollPane = new JScrollPane(mainTable);
 		// Setting the size of the scroll pane
-		scrollPane.setPreferredSize(new Dimension(600, 250));
+		scrollPane.setPreferredSize(new Dimension(600, 90));
 		// Creating a row table using supplied class to add row names to the
 		// table
 		JTable rowTable = new RowNumberTable(mainTable);

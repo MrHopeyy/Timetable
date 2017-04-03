@@ -15,7 +15,7 @@ public class Module {
 	// Variable int for how many days in a week.
 	public final static int N_DAYS = 4;
 	// String for the module code of the object.
-	private String Module_Code;
+	private String module_Code;
 	// Int for the amount of intro hours a module wants.
 	private int introHours;
 	// Int for the amount of total hours a module wants.
@@ -23,10 +23,10 @@ public class Module {
 	// Creating a 2d array of type IntVar
 	private IntVar[][] timetable = new IntVar[N_DAYS][N_HOURS];
 
-	public Module(Solver solver, String Module_Code, int introHours, int totalHours) {
+	public Module(Solver solver, String module_Code, int introHours, int totalHours) {
 
 		// initialising the variables of the object
-		this.Module_Code = Module_Code;
+		this.module_Code = module_Code;
 		this.introHours = introHours;
 		this.totalHours = totalHours;
 
@@ -56,7 +56,7 @@ public class Module {
 	// Getter for the module code of a module
 	public String getModuleCode() {
 
-		return Module_Code;
+		return module_Code;
 
 	}
 

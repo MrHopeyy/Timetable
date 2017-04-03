@@ -14,7 +14,8 @@ public class Programme {
 
 	// Creating the 2d array for the timetable.
 	public IntVar[][] timetable = new IntVar[Module.N_DAYS][Module.N_HOURS];
-	// Creating the an array list for the module objects soured form the main class.
+	// Creating the an array list for the module objects soured form the main
+	// class.
 	public ArrayList<String> module_codes = new ArrayList<String>();
 	// Creating a IntVar array
 	private IntVar[] timetable_Flatten;
@@ -27,14 +28,15 @@ public class Programme {
 		// Initialising the timetable flatten array
 		timetable_Flatten = solver.makeIntVarArray(Module.N_DAYS * Module.N_HOURS, 0, nModulesInProgramme);
 
-		solver.addConstraint(
-				solver.makeEquality(timetable_Flatten[0], 0));
-		solver.addConstraint(
-				solver.makeEquality(timetable_Flatten[9], 0));
-		solver.addConstraint(
-				solver.makeEquality(timetable_Flatten[26], 0));
-		solver.addConstraint(
-				solver.makeEquality(timetable_Flatten[35], 0));
+		solver.addConstraint(solver.makeEquality(timetable_Flatten[0], 0));
+		solver.addConstraint(solver.makeEquality(timetable_Flatten[9], 0));
+		solver.addConstraint(solver.makeEquality(timetable_Flatten[26], 0));
+		solver.addConstraint(solver.makeEquality(timetable_Flatten[35], 0));
+
+		for (int h = 4; h < timetable_Flatten.length; h = h + 9) {
+
+			solver.addConstraint(solver.makeEquality(timetable_Flatten[h], 0));
+		}
 
 		// Flattening the timetable 2d array into the timetable flattened array
 		for (int i = 0; i < Module.N_DAYS; i++) {
@@ -75,17 +77,15 @@ public class Programme {
 
 	public IntVar[][] generateTimetable(Solver solver) throws IOException {
 
-		// Creating a decision builder to solve all the constrain that have been made
+		// Creating a decision builder to solve all the constrain that have been
+		// made
 		DecisionBuilder db = solver.makePhase(timetable_Flatten, Solver.CHOOSE_FIRST_UNBOUND, Solver.ASSIGN_MAX_VALUE);
 		// Making a new search
 		solver.newSearch(db);
 		// Looking for next solution
 		solver.nextSolution();
-		
+
 		return timetable;
-		
-		
 
 	}
-
 }
