@@ -254,7 +254,7 @@ public class TimeTableCreatorTableView {
 
 		if (moduleCodeNameGenerator == null) {
 
-			JOptionPane.showMessageDialog(mainPanel, "Timetable not generated!", null, JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(mainPanel, "No Matches!, Timetable not generated.", null, JOptionPane.PLAIN_MESSAGE);
 			mainTable = new JTable(rowData, columnNames);
 
 		} else {

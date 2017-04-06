@@ -199,10 +199,11 @@ public class Main {
 		if (isIntroHoursLegal == true && introHours <= 9 && isTotalHoursLegal == true && totalHours <= 36) {
 			// Creating a programme object
 			programme = makeProgramme(solver, modules, programme_data);
+
+			
 		}
 
 		return programme.generateTimetable(solver);
-
 	}
 
 }

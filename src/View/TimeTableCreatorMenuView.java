@@ -55,6 +55,8 @@ public class TimeTableCreatorMenuView {
 
 		// creating all of the buttons for the menu
 		JButton newTableButton = new JButton();
+		JButton newModuleFieButton = new JButton();
+		JButton newCohortFieButton = new JButton();
 		JButton instButton = new JButton();
 		JButton ExitButton = new JButton();
 
@@ -98,7 +100,7 @@ public class TimeTableCreatorMenuView {
 				// Setting the size of the button
 				newTableButton.setPreferredSize(new Dimension(250, 50));
 				// Setting the text of the button
-				newTableButton.setText("Create New Table");
+				newTableButton.setText("Create Timetable");
 				// Setting the font and size of the button text
 				newTableButton.setFont(new Font("Arial", Font.BOLD, 24));
 				// Setting the text position of the button
@@ -107,6 +109,42 @@ public class TimeTableCreatorMenuView {
 				newTableButton.setVerticalTextPosition(JButton.CENTER);
 				// Adding the button to centre
 				center.add(newTableButton, gbc);
+			}
+			{
+				// Creating a button
+				newModuleFieButton = new JButton();
+				// Setting the foreground colour of the button to black
+				newModuleFieButton.setForeground(Color.BLACK);
+				// Setting the size of the button
+				newModuleFieButton.setPreferredSize(new Dimension(250, 50));
+				// Setting the text of the button
+				newModuleFieButton.setText("Create Module File");
+				// Setting the font and size of the button text
+				newModuleFieButton.setFont(new Font("Arial", Font.BOLD, 24));
+				// Setting the text position of the button
+				newModuleFieButton.setHorizontalTextPosition(JButton.CENTER);
+				// Setting the text position of the button
+				newModuleFieButton.setVerticalTextPosition(JButton.CENTER);
+				// Adding the button to centre
+				center.add(newModuleFieButton, gbc);
+			}
+			{
+				// Creating a button
+				newCohortFieButton = new JButton();
+				// Setting the foreground colour of the button to black
+				newCohortFieButton.setForeground(Color.BLACK);
+				// Setting the size of the button
+				newCohortFieButton.setPreferredSize(new Dimension(250, 50));
+				// Setting the text of the button
+				newCohortFieButton.setText("Create Cohort File");
+				// Setting the font and size of the button text
+				newCohortFieButton.setFont(new Font("Arial", Font.BOLD, 24));
+				// Setting the text position of the button
+				newCohortFieButton.setHorizontalTextPosition(JButton.CENTER);
+				// Setting the text position of the button
+				newCohortFieButton.setVerticalTextPosition(JButton.CENTER);
+				// Adding the button to centre
+				center.add(newCohortFieButton, gbc);
 			}
 			{
 				// Creating a button
@@ -186,6 +224,48 @@ public class TimeTableCreatorMenuView {
 				MainFrame.mainFrame.getContentPane().removeAll();
 				// Creating an instance of TimeTableCreatorMenuView
 				TimeTableCreatorFileModuleView gov = new TimeTableCreatorFileModuleView();
+				try {
+					// Adding the instance of the panel to the frame
+					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				// Repainting the frame
+				MainFrame.mainFrame.repaint();
+				// Revalidating the frame
+				MainFrame.mainFrame.revalidate();
+			}
+		});
+		
+		newModuleFieButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// Removing all the contents of the frame
+				MainFrame.mainFrame.getContentPane().removeAll();
+				// Creating an instance of TimeTableCreatorMenuView
+				TimeTableCreatorFileModuleCreationView gov = new TimeTableCreatorFileModuleCreationView();
+				try {
+					// Adding the instance of the panel to the frame
+					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				// Repainting the frame
+				MainFrame.mainFrame.repaint();
+				// Revalidating the frame
+				MainFrame.mainFrame.revalidate();
+			}
+		});
+		
+		newCohortFieButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// Removing all the contents of the frame
+				MainFrame.mainFrame.getContentPane().removeAll();
+				// Creating an instance of TimeTableCreatorMenuView
+				TimeTableCreatorFileCohortCreationView gov = new TimeTableCreatorFileCohortCreationView();
 				try {
 					// Adding the instance of the panel to the frame
 					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);

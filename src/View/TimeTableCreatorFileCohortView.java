@@ -67,6 +67,7 @@ public class TimeTableCreatorFileCohortView {
 		JButton backButton = new JButton();
 		JButton genButton = new JButton();
 		JButton openButton = new JButton();
+		JButton prevButton = new JButton();
 
 		// Creating a jTexArea for showing the file contents
 		JTextArea textArea = new JTextArea();
@@ -161,6 +162,23 @@ public class TimeTableCreatorFileCohortView {
 				openButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
+			{
+				// Creating a new button
+				prevButton = new JButton();
+				// Setting the foreground colour
+				prevButton.setForeground(Color.BLACK);
+				// Setting the size of the button
+				prevButton.setPreferredSize(new Dimension(100, 35));
+				// Setting the text of the button
+				prevButton.setText("Example");
+				// Setting the font and text size of the button
+				prevButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				// Setting the Horizontal position of the text
+				prevButton.setHorizontalTextPosition(JButton.CENTER);
+				// Setting the Vertical position of the text
+				prevButton.setVerticalTextPosition(JButton.CENTER);
+			}
+
 			// Creating a new panel
 			JPanel commandBox = new JPanel();
 			// Setting the panel to be transparent
@@ -187,6 +205,8 @@ public class TimeTableCreatorFileCohortView {
 			fileBox.setLayout(new FlowLayout());
 			// Adding a button to the panel
 			fileBox.add(openButton, gbc);
+			// Adding a button to the panel
+			fileBox.add(prevButton, gbc);
 			// Adding the panel into the panel
 			center.add(fileBox, gbc);
 
@@ -308,6 +328,8 @@ public class TimeTableCreatorFileCohortView {
 				ModulefileChooser.setOpaque(false);
 				// Setting the file reader to be null
 				FileReader reader = null;
+
+				textArea.setText("");
 				// Reading the file that was selected by the file path
 				try {
 					reader = new FileReader(CohortPath);
@@ -321,6 +343,16 @@ public class TimeTableCreatorFileCohortView {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+
+			}
+		});
+
+		prevButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				CohortPath = null;
+				textArea.setText("");
+				textArea.setText("Example of cohort format:" + "\n\n" + "CS1111,CS2020,CS3300,CS2100,CS1240");
 
 			}
 		});

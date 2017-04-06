@@ -12,21 +12,21 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class TimeTableCreatorFileModuleView {
+public class TimeTableCreatorFileModuleCreationView {
 
 	// Creating the panel
 	private JPanel mainPanel;
@@ -36,7 +36,7 @@ public class TimeTableCreatorFileModuleView {
 	/*
 	 * constructor for the TimeTableCreatorFileModuleView
 	 */
-	public TimeTableCreatorFileModuleView() {
+	public TimeTableCreatorFileModuleCreationView() {
 
 	}
 
@@ -64,9 +64,8 @@ public class TimeTableCreatorFileModuleView {
 
 		// creating all of the buttons for the menu
 		JButton backButton = new JButton();
-		JButton genButton = new JButton();
-		JButton openButton = new JButton();
-		JButton prevButton = new JButton();
+		JButton saveModuleButton = new JButton();
+		JButton addButton = new JButton();
 
 		// Creating a jTexArea for showing the file contents
 		JTextArea textArea = new JTextArea();
@@ -80,8 +79,35 @@ public class TimeTableCreatorFileModuleView {
 		// Setting the size of the scroll pane
 		scrollPane.setPreferredSize(new Dimension(600, 250));
 
+		JTextArea textAreaModuleInput = new JTextArea();
+
+		// Creating a scroll pane to store the text area
+		JScrollPane scrollPaneModuleInput = new JScrollPane(textAreaModuleInput);
+		// Setting the scroll pane to always show the vertical scroll bar
+		scrollPaneModuleInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		// Setting the size of the scroll pane
+		scrollPaneModuleInput.setPreferredSize(new Dimension(40, 20));
+		scrollPaneModuleInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneModuleInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		String[] introHours = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+		// Create the combo box, select item at index 4.
+		// Indices start at 0, so 4 specifies the pig.
+		JComboBox<String> introHoursList = new JComboBox<String>(introHours);
+		introHoursList.setSelectedIndex(0);
+
+		String[] totalHours = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32",
+				"33", "34", "35", "36" };
+
+		// Create the combo box, select item at index 4.
+		// Indices start at 0, so 4 specifies the pig.
+		JComboBox<String> totalHoursList = new JComboBox<String>(totalHours);
+		totalHoursList.setSelectedIndex(0);
+
 		// Creating a new label for the title and setting the text
-		JLabel label1 = new JLabel("Select module file");
+		JLabel label1 = new JLabel("Create module file");
 		// Setting the font and the size of the text
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
 		// Setting the vertical position of the text
@@ -139,52 +165,36 @@ public class TimeTableCreatorFileModuleView {
 			}
 			{
 				// Creating a new button
-				genButton = new JButton();
+				saveModuleButton = new JButton();
 				// Setting the foreground colour
-				genButton.setForeground(Color.BLACK);
+				saveModuleButton.setForeground(Color.BLACK);
 				// Setting the size of the button
-				genButton.setPreferredSize(new Dimension(100, 35));
+				saveModuleButton.setPreferredSize(new Dimension(100, 35));
 				// Setting the text of the button
-				genButton.setText("Next");
+				saveModuleButton.setText("Save File");
 				// Setting the font and text size of the button
-				genButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				saveModuleButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				// Setting the Horizontal position of the text
-				genButton.setHorizontalTextPosition(JButton.CENTER);
+				saveModuleButton.setHorizontalTextPosition(JButton.CENTER);
 				// Setting the Vertical position of the text
-				genButton.setVerticalTextPosition(JButton.CENTER);
+				saveModuleButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			{
 				// Creating a new button
-				openButton = new JButton();
+				addButton = new JButton();
 				// Setting the foreground colour
-				openButton.setForeground(Color.BLACK);
+				addButton.setForeground(Color.BLACK);
 				// Setting the size of the button
-				openButton.setPreferredSize(new Dimension(100, 35));
+				addButton.setPreferredSize(new Dimension(100, 35));
 				// Setting the text of the button
-				openButton.setText("Open File");
+				addButton.setText("Add Module");
 				// Setting the font and text size of the button
-				openButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				addButton.setFont(new Font("Arial", Font.PLAIN, 12));
 				// Setting the Horizontal position of the text
-				openButton.setHorizontalTextPosition(JButton.CENTER);
+				addButton.setHorizontalTextPosition(JButton.CENTER);
 				// Setting the Vertical position of the text
-				openButton.setVerticalTextPosition(JButton.CENTER);
-			}
-			{
-				// Creating a new button
-				prevButton = new JButton();
-				// Setting the foreground colour
-				prevButton.setForeground(Color.BLACK);
-				// Setting the size of the button
-				prevButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
-				prevButton.setText("Example");
-				// Setting the font and text size of the button
-				prevButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
-				prevButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
-				prevButton.setVerticalTextPosition(JButton.CENTER);
+				addButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			// Creating a new panel
@@ -196,7 +206,7 @@ public class TimeTableCreatorFileModuleView {
 			// Adding the back button
 			commandBox.add(backButton, gbc);
 			// Adding the generate button
-			commandBox.add(genButton, gbc);
+			commandBox.add(saveModuleButton, gbc);
 
 			// Setting the grid width of the grid bag layout
 			gbc.gridwidth = gbc.REMAINDER;
@@ -212,10 +222,11 @@ public class TimeTableCreatorFileModuleView {
 			fileBox.setOpaque(false);
 			// Adding a button to the panel
 			fileBox.setLayout(new FlowLayout());
+			fileBox.add(scrollPaneModuleInput, gbc);
+			fileBox.add(introHoursList, gbc);
+			fileBox.add(totalHoursList, gbc);
 			// Adding a button to the panel
-			fileBox.add(openButton, gbc);
-			// Adding a button to the panel
-			fileBox.add(prevButton, gbc);
+			fileBox.add(addButton, gbc);
 			// Adding the panel into the panel
 			center.add(fileBox, gbc);
 
@@ -264,90 +275,44 @@ public class TimeTableCreatorFileModuleView {
 			}
 		});
 
-		genButton.addActionListener(new ActionListener() {
+		saveModuleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// Checking if the module path is not null
-				if (ModulePath != null) {
+				final JFileChooser SaveAs = new JFileChooser();
+			      SaveAs.setApproveButtonText("Save");
+			      int actionDialog = SaveAs.showSaveDialog(null);
+			      if (actionDialog != JFileChooser.APPROVE_OPTION) {
+			         return;
+			      }
 
-					// Remove all of the contents of the frame
-					MainFrame.mainFrame.getContentPane().removeAll();
-					// Creating a new instance of TimeTableCreatorTableView
-					TimeTableCreatorFileCohortView gov = new TimeTableCreatorFileCohortView();
-					// Adding the instance of the new panel to the frame
-					MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
-					// Repainting the frame
-					MainFrame.mainFrame.repaint();
-					// Revalidating the frame
-					MainFrame.mainFrame.revalidate();
+			      File fileName = new File(SaveAs.getSelectedFile() + ".txt");
+			      BufferedWriter outFile = null;
+			      try {
+			         outFile = new BufferedWriter(new FileWriter(fileName));
 
-				} else {
+			         textArea.write(outFile);
+			         JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
+			      } catch (IOException ex) {
+			         ex.printStackTrace();
+			      } finally {
+			         if (outFile != null) {
+			            try {
+			               outFile.close();
+			            } catch (IOException e1) {
+			            }
+			         }
+			      }
+			   }
 
-					// Telling the user to select a file
-					JOptionPane.showMessageDialog(mainPanel, "Please select a file for module data!", "Attention!",
-							JOptionPane.WARNING_MESSAGE);
+			
 
-				}
-
-			}
+			
 		});
 
-		openButton.addActionListener(new ActionListener() {
+		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// Creating a string of the users home path
-				String userhome = System.getProperty("user.home");
-				// Creating a new file chooser
-				JFileChooser ModulefileChooser = new JFileChooser(userhome + "\\Documets");
-				// Creating a filter for the file type of the file chooser
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "csv", "rtf", "docx");
-				// Adding the filter
-				ModulefileChooser.setFileFilter(filter);
-				// Removing the option to look for all file types
-				ModulefileChooser.setAcceptAllFileFilterUsed(false);
-				// Setting the current directory of the file chooser
-				ModulefileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-				// Setting the components parent to null
-				Component parent = null;
-				// Creating a int of the parent
-				int returnVal = ModulefileChooser.showOpenDialog(parent);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-					// Retrieving the file path to a string variable
-					ModulePath = ModulefileChooser.getSelectedFile().getAbsolutePath().toString();
-
-				}
-
-				// Setting the file chooser to be transparent
-				ModulefileChooser.setOpaque(false);
-				// Setting the file reader to be null
-				FileReader reader = null;
-
-				textArea.setText("");
-				// Reading the file that was selected by the file path
-				try {
-					reader = new FileReader(ModulePath);
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				try {
-					textArea.read(reader, ModulePath);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-		});
-
-		prevButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				ModulePath = null;
-				textArea.setText("");
-				textArea.setText("Example of module format:" + "\n\n" + "CS1111,1,5" + "\n" + "CS3214,4,6" + "\n" + "CS2330,0,8" + "\n" + "CS1070,5,6" + "\n"
-						+ "CS2121,2,5");
+				textArea.append("CS" + textAreaModuleInput.getText() + "," + introHoursList.getSelectedIndex() + "," + totalHoursList.getSelectedIndex() + "\n");
 
 			}
 		});
