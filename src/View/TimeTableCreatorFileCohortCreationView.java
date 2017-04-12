@@ -16,6 +16,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -29,9 +30,8 @@ import javax.swing.text.Document;
 
 public class TimeTableCreatorFileCohortCreationView {
 
-	// Creating the panel
+	// Creating Variables
 	private JPanel mainPanel;
-	// Creating a global variable for the file path
 	public static String ModulePath;
 
 	/*
@@ -47,7 +47,7 @@ public class TimeTableCreatorFileCohortCreationView {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("static-access")
-	public JPanel buildTimeTableCreatorMenu() throws IOException {
+	public JPanel buildTimeTableCohortCreator() throws IOException {
 
 		try {
 			mainPanel = (JPanel) createContent();
@@ -56,11 +56,8 @@ public class TimeTableCreatorFileCohortCreationView {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		// Setting the panel to be visible
 		mainPanel.setVisible(true);
-		// Setting the size of the panel
 		mainPanel.setSize(720, 480);
-		// Setting the layout of the panel
 		mainPanel.setLayout(new BorderLayout());
 
 		// creating all of the buttons for the menu
@@ -71,175 +68,122 @@ public class TimeTableCreatorFileCohortCreationView {
 
 		// Creating a jTexArea for showing the file contents
 		JTextArea textArea = new JTextArea();
-		// Setting the text area to not be editable
 		textArea.setEditable(false);
+
+		// Creating a jTexArea for making a module code
+		JTextArea textAreaModuleCode = new JTextArea();
 
 		// Creating a scroll pane to store the text area
 		JScrollPane scrollPane = new JScrollPane(textArea);
-		// Setting the scroll pane to always show the vertical scroll bar
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		// Setting the size of the scroll pane
 		scrollPane.setPreferredSize(new Dimension(600, 250));
-
-		JTextArea textAreaCohortInput = new JTextArea();
+		textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		// Creating a scroll pane to store the text area
-		JScrollPane scrollPaneCohortInput = new JScrollPane(textAreaCohortInput);
-		// Setting the scroll pane to always show the vertical scroll bar
-		scrollPaneCohortInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		// Setting the size of the scroll pane
-		scrollPaneCohortInput.setPreferredSize(new Dimension(40, 20));
-		scrollPaneCohortInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPaneCohortInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollPaneModuleCode = new JScrollPane(textAreaModuleCode);
+		scrollPaneModuleCode.setPreferredSize(new Dimension(60, 30));
+		textAreaModuleCode.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		scrollPaneModuleCode.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		scrollPaneModuleCode.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneModuleCode.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		// List<Integer> moduleCode = new ArrayList<Integer>();
+		// for (int i = 1000; i <= 9999; ++i) {
+		// moduleCode.add(i);
+		// }
+		// JComboBox<?> moduleCodeComboBox = new
+		// JComboBox<Object>(moduleCode.toArray());
 
 		// Creating a new label for the title and setting the text
 		JLabel label1 = new JLabel("Create cohort file");
-		// Setting the font and the size of the text
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
-		// Setting the vertical position of the text
 		label1.setVerticalTextPosition(JLabel.CENTER);
-		// Setting the horizontal position of the text
 		label1.setHorizontalTextPosition(JLabel.CENTER);
-
-		// Creating a new label for the title and setting the text
-		JLabel label2 = new JLabel("Preview of file");
-		// Setting the font and the size of the text
-		label2.setFont(new Font("Arial", Font.BOLD, 12));
-		// Setting the vertical position of the text
-		label2.setVerticalTextPosition(JLabel.CENTER);
-		// Setting the horizontal position of the text
-		label2.setHorizontalTextPosition(JLabel.CENTER);
+		JLabel textAreaModuleInputLabel = new JLabel("Module Code:");
+		textAreaModuleInputLabel.setFont(new Font("Arial", Font.BOLD, 11));
 
 		try {
 
-			// Creating a new panel centre
 			JPanel center = new JPanel();
-			// Creating a new layout
 			GridBagLayout thisLayout = new GridBagLayout();
-			// Setting the layout of centre to grid bag layout
 			center.setLayout(thisLayout);
-			// Setting the size of the centre
 			center.setSize(720, 480);
-			// Setting centre to be transparent
 			center.setOpaque(false);
-
-			// Creating a new gridbag layout
 			GridBagConstraints gbc = new GridBagConstraints();
-			// Setting the insets of the layout
 			gbc.insets = new Insets(8, 8, 8, 8);
-			// Setting the grid width of the gbc
 			gbc.gridwidth = gbc.REMAINDER;
 
 			/**
 			 * creating the buttons for the panel
 			 */
 			{
-				// Creating a new button
 				backButton = new JButton();
-				// Setting the foreground colour
 				backButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				backButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				backButton.setText("Back");
-				// Setting the font and text size of the button
 				backButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				backButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				backButton.setVerticalTextPosition(JButton.CENTER);
 			}
 			{
-				// Creating a new button
 				saveModuleButton = new JButton();
-				// Setting the foreground colour
 				saveModuleButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				saveModuleButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				saveModuleButton.setText("Save File");
-				// Setting the font and text size of the button
 				saveModuleButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				saveModuleButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				saveModuleButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			{
-				// Creating a new button
 				addButton = new JButton();
-				// Setting the foreground colour
 				addButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				addButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				addButton.setText("Add Module");
-				// Setting the font and text size of the button
 				addButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				addButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				addButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			{
-				// Creating a new button
 				addNewLineButton = new JButton();
-				// Setting the foreground colour
 				addNewLineButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				addNewLineButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				addNewLineButton.setText("Add Cohort");
-				// Setting the font and text size of the button
 				addNewLineButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				addNewLineButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				addNewLineButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
-			// Creating a new panel
 			JPanel commandBox = new JPanel();
-			// Setting the panel to be transparent
 			commandBox.setOpaque(false);
-			// Setting a the panels layout to be flow layout
 			commandBox.setLayout(new FlowLayout());
-			// Adding the back button
 			commandBox.add(backButton, gbc);
-			// Adding the generate button
 			commandBox.add(saveModuleButton, gbc);
-
-			// Setting the grid width of the grid bag layout
 			gbc.gridwidth = gbc.REMAINDER;
-
-			// Adding the scroll pane to centre
 			center.add(scrollPane, gbc);
-			// Adding the open button to centre
-			// center.add(openButton, gbc);
+
+			// Creating a new panel
+			JPanel moduleCodeBox = new JPanel();
+			moduleCodeBox.setOpaque(false);
+			moduleCodeBox.setLayout(new FlowLayout());
+			moduleCodeBox.add(textAreaModuleInputLabel, gbc);
+			moduleCodeBox.add(scrollPaneModuleCode, gbc);
 
 			// Creating a new panel
 			JPanel fileBox = new JPanel();
-			// Setting the panel to be transparent
 			fileBox.setOpaque(false);
-			// Adding a button to the panel
 			fileBox.setLayout(new FlowLayout());
-			fileBox.add(scrollPaneCohortInput, gbc);
-			// Adding a button to the panel
+			fileBox.add(moduleCodeBox, gbc);
 			fileBox.add(addButton, gbc);
-			// Adding a button to the panel
 			fileBox.add(addNewLineButton, gbc);
-			// Adding the panel into the panel
 			center.add(fileBox, gbc);
 
 			// Creating a new panel
 			JPanel titleBox = new JPanel();
-			// Setting the panel to be transparent
 			titleBox.setOpaque(false);
-			// Adding the flow layout to the panel
 			titleBox.setLayout(new FlowLayout());
-			// Adding the label to the panel
 			titleBox.add(label1);
 
 			// Adding the panels to the main panel
@@ -247,9 +191,7 @@ public class TimeTableCreatorFileCohortCreationView {
 			mainPanel.add(center, BorderLayout.CENTER);
 			mainPanel.add(titleBox, BorderLayout.NORTH);
 
-			// Setting the command box panel to be transparent
 			commandBox.setOpaque(false);
-			// Setting the centre panel to be transparent
 			center.setOpaque(false);
 
 		} catch (Exception e) {
@@ -262,24 +204,30 @@ public class TimeTableCreatorFileCohortCreationView {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// Removing all of the contents of the panel
 				MainFrame.mainFrame.getContentPane().removeAll();
-				// Creating a new instance of TimeTableCreatorFileModuleView
 				TimeTableCreatorMenuView gov = new TimeTableCreatorMenuView();
-				// Adding the instance of the new panel to the main frame
 				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
-				// Repainting the frame
 				MainFrame.mainFrame.repaint();
-				// Revalidating the frame
 				MainFrame.mainFrame.revalidate();
-				// Setting the module path to null
 				ModulePath = null;
 
 			}
 		});
 
+		/**
+		 * used to create an action listener to save the module created.
+		 */
 		saveModuleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				try {
+					Document doc = textArea.getDocument();
+					if (doc.getLength() > 0) {
+						doc.remove(doc.getLength() - 1, 1);
+					}
+				} catch (BadLocationException ex) {
+					ex.printStackTrace();
+				}
 
 				final JFileChooser SaveAs = new JFileChooser();
 				SaveAs.setApproveButtonText("Save");
@@ -313,7 +261,7 @@ public class TimeTableCreatorFileCohortCreationView {
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				textArea.append("CS" + textAreaCohortInput.getText() + ",");
+				textArea.append(textAreaModuleCode.getText() + ",");
 
 			}
 		});
@@ -321,21 +269,20 @@ public class TimeTableCreatorFileCohortCreationView {
 		addNewLineButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				 try {
-                     Document doc = textArea.getDocument();
-                     if (doc.getLength() > 0) {
-                         doc.remove(doc.getLength() - 1, 1);
-                     }
-                 } catch (BadLocationException ex) {
-                     ex.printStackTrace();
-                 }
-				
+				try {
+					Document doc = textArea.getDocument();
+					if (doc.getLength() > 0) {
+						doc.remove(doc.getLength() - 1, 1);
+					}
+				} catch (BadLocationException ex) {
+					ex.printStackTrace();
+				}
+
 				textArea.append("\n");
 
 			}
 		});
 
-		// Returning the panel
 		return mainPanel;
 
 	}
@@ -345,7 +292,6 @@ public class TimeTableCreatorFileCohortCreationView {
 	 */
 	private Component createContent() throws IOException {
 
-		// Setting the background image of the pane;
 		final ImageIcon icon = new ImageIcon(this.getClass().getResource("/Files/background.jpg"));
 
 		@SuppressWarnings("serial")
@@ -353,13 +299,11 @@ public class TimeTableCreatorFileCohortCreationView {
 			@Override
 			protected void paintComponent(Graphics g) {
 
-				// Paining the background image
 				super.paintComponent(g);
 				g.drawImage(icon.getImage(), 0, 0, null);
 			}
 		};
 
-		// Returning the panel
 		return panel;
 	}
 

@@ -16,6 +16,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -28,9 +32,8 @@ import javax.swing.JTextArea;
 
 public class TimeTableCreatorFileModuleCreationView {
 
-	// Creating the panel
+	// Creating variables
 	private JPanel mainPanel;
-	// Creating a global variable for the file path
 	public static String ModulePath;
 
 	/*
@@ -46,7 +49,7 @@ public class TimeTableCreatorFileModuleCreationView {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("static-access")
-	public JPanel buildTimeTableCreatorMenu() throws IOException {
+	public JPanel buildTimeTableCohortView() throws IOException {
 
 		try {
 			mainPanel = (JPanel) createContent();
@@ -55,11 +58,8 @@ public class TimeTableCreatorFileModuleCreationView {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		// Setting the panel to be visible
 		mainPanel.setVisible(true);
-		// Setting the size of the panel
 		mainPanel.setSize(720, 480);
-		// Setting the layout of the panel
 		mainPanel.setLayout(new BorderLayout());
 
 		// creating all of the buttons for the menu
@@ -69,174 +69,148 @@ public class TimeTableCreatorFileModuleCreationView {
 
 		// Creating a jTexArea for showing the file contents
 		JTextArea textArea = new JTextArea();
-		// Setting the text area to not be editable
 		textArea.setEditable(false);
+
+		// Creating a jTexArea for making a module code
+		JTextArea textAreaCohortCode = new JTextArea();
 
 		// Creating a scroll pane to store the text area
 		JScrollPane scrollPane = new JScrollPane(textArea);
-		// Setting the scroll pane to always show the vertical scroll bar
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		// Setting the size of the scroll pane
 		scrollPane.setPreferredSize(new Dimension(600, 250));
-
-		JTextArea textAreaModuleInput = new JTextArea();
+		textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		// Creating a scroll pane to store the text area
-		JScrollPane scrollPaneModuleInput = new JScrollPane(textAreaModuleInput);
-		// Setting the scroll pane to always show the vertical scroll bar
-		scrollPaneModuleInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		// Setting the size of the scroll pane
-		scrollPaneModuleInput.setPreferredSize(new Dimension(40, 20));
-		scrollPaneModuleInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPaneModuleInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollPaneCohortCode = new JScrollPane(textAreaCohortCode);
+		scrollPaneCohortCode.setPreferredSize(new Dimension(60, 30));
+		textAreaCohortCode.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		scrollPaneCohortCode.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		scrollPaneCohortCode.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneCohortCode.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		String[] introHours = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+		// List<Integer> moduleCode = new ArrayList<Integer>();
+		// for (int i = 1000; i <= 9999; ++i) {
+		// moduleCode.add(i);
+		// }
+		// JComboBox<?> moduleCodeComboBox = new
+		// JComboBox<Object>(moduleCode.toArray());
 
-		// Create the combo box, select item at index 4.
-		// Indices start at 0, so 4 specifies the pig.
-		JComboBox<String> introHoursList = new JComboBox<String>(introHours);
+		List<Integer> introHours = new ArrayList<Integer>();
+		for (int i = 0; i <= 9; ++i) {
+			introHours.add(i);
+		}
+		JComboBox<?> introHoursList = new JComboBox<Object>(introHours.toArray());
 		introHoursList.setSelectedIndex(0);
 
-		String[] totalHours = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
-				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32",
-				"33", "34", "35", "36" };
-
-		// Create the combo box, select item at index 4.
-		// Indices start at 0, so 4 specifies the pig.
-		JComboBox<String> totalHoursList = new JComboBox<String>(totalHours);
+		List<Integer> totalHours = new ArrayList<Integer>();
+		for (int i = 1; i <= 36; ++i) {
+			totalHours.add(i);
+		}
+		JComboBox<?> totalHoursList = new JComboBox<Object>(totalHours.toArray());
 		totalHoursList.setSelectedIndex(0);
 
 		// Creating a new label for the title and setting the text
 		JLabel label1 = new JLabel("Create module file");
-		// Setting the font and the size of the text
 		label1.setFont(new Font("Arial", Font.BOLD, 36));
-		// Setting the vertical position of the text
 		label1.setVerticalTextPosition(JLabel.CENTER);
-		// Setting the horizontal position of the text
 		label1.setHorizontalTextPosition(JLabel.CENTER);
 
-		// Creating a new label for the title and setting the text
-		JLabel label2 = new JLabel("Preview of file");
-		// Setting the font and the size of the text
-		label2.setFont(new Font("Arial", Font.BOLD, 12));
-		// Setting the vertical position of the text
-		label2.setVerticalTextPosition(JLabel.CENTER);
-		// Setting the horizontal position of the text
-		label2.setHorizontalTextPosition(JLabel.CENTER);
+		JLabel textAreaModuleInputLabel = new JLabel("Module Code:");
+		textAreaModuleInputLabel.setFont(new Font("Arial", Font.BOLD, 11));
+		JLabel textAreaIntroInputLabel = new JLabel("Intro Hours:");
+		textAreaIntroInputLabel.setFont(new Font("Arial", Font.BOLD, 11));
+		JLabel textAreaTotalInputLabel = new JLabel("Total Hours:");
+		textAreaTotalInputLabel.setFont(new Font("Arial", Font.BOLD, 11));
 
 		try {
 
 			// Creating a new panel centre
 			JPanel center = new JPanel();
-			// Creating a new layout
 			GridBagLayout thisLayout = new GridBagLayout();
-			// Setting the layout of centre to grid bag layout
 			center.setLayout(thisLayout);
-			// Setting the size of the centre
 			center.setSize(720, 480);
-			// Setting centre to be transparent
 			center.setOpaque(false);
-
-			// Creating a new gridbag layout
 			GridBagConstraints gbc = new GridBagConstraints();
-			// Setting the insets of the layout
 			gbc.insets = new Insets(8, 8, 8, 8);
-			// Setting the grid width of the gbc
 			gbc.gridwidth = gbc.REMAINDER;
 
 			/**
 			 * creating the buttons for the panel
 			 */
 			{
-				// Creating a new button
 				backButton = new JButton();
-				// Setting the foreground colour
 				backButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				backButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				backButton.setText("Back");
-				// Setting the font and text size of the button
 				backButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				backButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				backButton.setVerticalTextPosition(JButton.CENTER);
 			}
 			{
-				// Creating a new button
 				saveModuleButton = new JButton();
-				// Setting the foreground colour
 				saveModuleButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				saveModuleButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				saveModuleButton.setText("Save File");
-				// Setting the font and text size of the button
 				saveModuleButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				saveModuleButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				saveModuleButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			{
-				// Creating a new button
 				addButton = new JButton();
-				// Setting the foreground colour
 				addButton.setForeground(Color.BLACK);
-				// Setting the size of the button
 				addButton.setPreferredSize(new Dimension(100, 35));
-				// Setting the text of the button
 				addButton.setText("Add Module");
-				// Setting the font and text size of the button
 				addButton.setFont(new Font("Arial", Font.PLAIN, 12));
-				// Setting the Horizontal position of the text
 				addButton.setHorizontalTextPosition(JButton.CENTER);
-				// Setting the Vertical position of the text
 				addButton.setVerticalTextPosition(JButton.CENTER);
 			}
 
 			// Creating a new panel
 			JPanel commandBox = new JPanel();
-			// Setting the panel to be transparent
 			commandBox.setOpaque(false);
-			// Setting a the panels layout to be flow layout
 			commandBox.setLayout(new FlowLayout());
-			// Adding the back button
 			commandBox.add(backButton, gbc);
-			// Adding the generate button
 			commandBox.add(saveModuleButton, gbc);
-
-			// Setting the grid width of the grid bag layout
 			gbc.gridwidth = gbc.REMAINDER;
-
-			// Adding the scroll pane to centre
 			center.add(scrollPane, gbc);
-			// Adding the open button to centre
-			// center.add(openButton, gbc);
+
+			// Creating a new panel
+			JPanel moduleNumberBox = new JPanel();
+			moduleNumberBox.setOpaque(false);
+			moduleNumberBox.setLayout(new FlowLayout());
+			moduleNumberBox.add(textAreaModuleInputLabel, gbc);
+			moduleNumberBox.add(scrollPaneCohortCode, gbc);
+
+			// Creating a new panel
+			JPanel introNumberBox = new JPanel();
+			introNumberBox.setOpaque(false);
+			introNumberBox.setLayout(new FlowLayout());
+			introNumberBox.add(textAreaIntroInputLabel, gbc);
+			introNumberBox.add(introHoursList, gbc);
+
+			// Creating a new panel
+			JPanel totalNumberBox = new JPanel();
+			totalNumberBox.setOpaque(false);
+			totalNumberBox.setLayout(new FlowLayout());
+			totalNumberBox.add(textAreaTotalInputLabel, gbc);
+			totalNumberBox.add(totalHoursList, gbc);
 
 			// Creating a new panel
 			JPanel fileBox = new JPanel();
-			// Setting the panel to be transparent
 			fileBox.setOpaque(false);
-			// Adding a button to the panel
 			fileBox.setLayout(new FlowLayout());
-			fileBox.add(scrollPaneModuleInput, gbc);
-			fileBox.add(introHoursList, gbc);
-			fileBox.add(totalHoursList, gbc);
-			// Adding a button to the panel
+			fileBox.add(moduleNumberBox, gbc);
+			fileBox.add(introNumberBox, gbc);
+			fileBox.add(totalNumberBox, gbc);
 			fileBox.add(addButton, gbc);
-			// Adding the panel into the panel
 			center.add(fileBox, gbc);
 
 			// Creating a new panel
 			JPanel titleBox = new JPanel();
-			// Setting the panel to be transparent
 			titleBox.setOpaque(false);
-			// Adding the flow layout to the panel
 			titleBox.setLayout(new FlowLayout());
-			// Adding the label to the panel
 			titleBox.add(label1);
 
 			// Adding the panels to the main panel
@@ -244,9 +218,7 @@ public class TimeTableCreatorFileModuleCreationView {
 			mainPanel.add(center, BorderLayout.CENTER);
 			mainPanel.add(titleBox, BorderLayout.NORTH);
 
-			// Setting the command box panel to be transparent
 			commandBox.setOpaque(false);
-			// Setting the centre panel to be transparent
 			center.setOpaque(false);
 
 		} catch (Exception e) {
@@ -254,70 +226,65 @@ public class TimeTableCreatorFileModuleCreationView {
 		}
 
 		/**
-		 * used to create an action listener to see if the user wants to quit.
+		 * used to create an action listener to see if the user wants to go to
+		 * previous panel.
 		 */
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// Removing all of the contents of the panel
 				MainFrame.mainFrame.getContentPane().removeAll();
-				// Creating a new instance of TimeTableCreatorFileModuleView
 				TimeTableCreatorMenuView gov = new TimeTableCreatorMenuView();
-				// Adding the instance of the new panel to the main frame
 				MainFrame.mainFrame.add(gov.buildTimeTableCreatorMenu(), BorderLayout.CENTER);
-				// Repainting the frame
 				MainFrame.mainFrame.repaint();
-				// Revalidating the frame
 				MainFrame.mainFrame.revalidate();
-				// Setting the module path to null
 				ModulePath = null;
 
 			}
 		});
 
+		/**
+		 * used to create an action listener to save module fie.
+		 */
 		saveModuleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				final JFileChooser SaveAs = new JFileChooser();
-			      SaveAs.setApproveButtonText("Save");
-			      int actionDialog = SaveAs.showSaveDialog(null);
-			      if (actionDialog != JFileChooser.APPROVE_OPTION) {
-			         return;
-			      }
+				SaveAs.setApproveButtonText("Save");
+				int actionDialog = SaveAs.showSaveDialog(null);
+				if (actionDialog != JFileChooser.APPROVE_OPTION) {
+					return;
+				}
 
-			      File fileName = new File(SaveAs.getSelectedFile() + ".txt");
-			      BufferedWriter outFile = null;
-			      try {
-			         outFile = new BufferedWriter(new FileWriter(fileName));
+				File fileName = new File(SaveAs.getSelectedFile() + ".txt");
+				BufferedWriter outFile = null;
+				try {
+					outFile = new BufferedWriter(new FileWriter(fileName));
 
-			         textArea.write(outFile);
-			         JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
-			      } catch (IOException ex) {
-			         ex.printStackTrace();
-			      } finally {
-			         if (outFile != null) {
-			            try {
-			               outFile.close();
-			            } catch (IOException e1) {
-			            }
-			         }
-			      }
-			   }
+					textArea.write(outFile);
+					JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				} finally {
+					if (outFile != null) {
+						try {
+							outFile.close();
+						} catch (IOException e1) {
+						}
+					}
+				}
+			}
 
-			
-
-			
 		});
 
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				textArea.append("CS" + textAreaModuleInput.getText() + "," + introHoursList.getSelectedIndex() + "," + totalHoursList.getSelectedIndex() + "\n");
+				textArea.append(textAreaCohortCode.getText() + "," + introHoursList.getSelectedItem() + ","
+						+ totalHoursList.getSelectedItem() + "\n");
 
 			}
 		});
 
-		// Returning the panel
 		return mainPanel;
 
 	}
@@ -327,7 +294,6 @@ public class TimeTableCreatorFileModuleCreationView {
 	 */
 	private Component createContent() throws IOException {
 
-		// Setting the background image of the pane;
 		final ImageIcon icon = new ImageIcon(this.getClass().getResource("/Files/background.jpg"));
 
 		@SuppressWarnings("serial")
@@ -335,13 +301,11 @@ public class TimeTableCreatorFileModuleCreationView {
 			@Override
 			protected void paintComponent(Graphics g) {
 
-				// Paining the background image
 				super.paintComponent(g);
 				g.drawImage(icon.getImage(), 0, 0, null);
 			}
 		};
 
-		// Returning the panel
 		return panel;
 	}
 
