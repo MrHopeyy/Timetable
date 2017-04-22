@@ -19,12 +19,22 @@ public class MainFrame {
 		mainFrame.setLayout(new BorderLayout());
 		mainFrame.setVisible(true);
 		mainFrame.setLocationRelativeTo(null);
-		//mainFrame.setDefaultCloseOperation(0);
+		mainFrame.setDefaultCloseOperation(0);
 		TimeTableCreatorMenuView g = new TimeTableCreatorMenuView();
 		JPanel start = g.buildTimeTableCreatorMenu();
 		mainFrame.add(start, BorderLayout.CENTER);
 		MainFrame.mainFrame.setVisible(true);
-		//MainFrame.mainFrame.setDefaultCloseOperation(0);
+		MainFrame.mainFrame.setDefaultCloseOperation(0);
+		File fileKeepConstraints = new File("src/Files/keepConsraints.txt");
+		File fileChangeConstraints = new File("src/Files/changeConsraints.txt");
+		
+		if (fileKeepConstraints.exists()) {
+			fileKeepConstraints.delete();
+			}
+			
+			if (!fileKeepConstraints.exists()) {
+			fileChangeConstraints.delete();
+			}
 
 	}
 

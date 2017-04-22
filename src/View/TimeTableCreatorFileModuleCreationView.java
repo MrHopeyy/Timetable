@@ -69,7 +69,7 @@ public class TimeTableCreatorFileModuleCreationView {
 
 		// Creating a jTexArea for showing the file contents
 		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
+		//textArea.setEditable(false);
 
 		// Creating a jTexArea for making a module code
 		JTextArea textAreaCohortCode = new JTextArea();
@@ -278,9 +278,18 @@ public class TimeTableCreatorFileModuleCreationView {
 
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String moduleCodeRead = textAreaCohortCode.getText();
+				System.out.println("here: " + moduleCodeRead);
+				if( moduleCodeRead.equals("") || moduleCodeRead.equals(" ") || moduleCodeRead.equals(null)){
+					moduleCodeRead = "AA1234";
+					textArea.append(moduleCodeRead + "," + introHoursList.getSelectedItem() + ","
+							+ totalHoursList.getSelectedItem() + "\n");
+				}else{
+					textArea.append(moduleCodeRead + "," + introHoursList.getSelectedItem() + ","
+							+ totalHoursList.getSelectedItem() + "\n");
 
-				textArea.append(textAreaCohortCode.getText() + "," + introHoursList.getSelectedItem() + ","
-						+ totalHoursList.getSelectedItem() + "\n");
+				}
+			
 
 			}
 		});

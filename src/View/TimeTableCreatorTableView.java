@@ -37,6 +37,7 @@ import Model.Main;
 public class TimeTableCreatorTableView {
 
 	private JPanel mainPanel;
+	private JTable mainTable;
 
 	/*
 	 * constructor for the menuView
@@ -90,8 +91,8 @@ public class TimeTableCreatorTableView {
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
-		ArrayList<String> module_codes = new ArrayList<String>();
-		module_codes.add("BREAK");
+		//ArrayList<String> module_codes = new ArrayList<String>();
+		//module_codes.add("BREAK");
 		String csvFile = TimeTableCreatorFileCohortView.CohortPath;
 		String[] programme_Data = null;
 
@@ -125,7 +126,6 @@ public class TimeTableCreatorTableView {
 	// Method to compare saved names and store matches
 	public Object[][] moduleCodeNameGenerator(String[] importCohortNames, ArrayList<String> importModulesNames)
 			throws IOException {
-
 		ArrayList<String> module_codes = new ArrayList<String>();
 		module_codes.add("BREAK");
 
@@ -146,15 +146,20 @@ public class TimeTableCreatorTableView {
 
 		IntVar[][] rowData = null;
 		Boolean checkTable = false;
-		try{
-		checkTable = Main.validTimetableCheck();
-		
-		}catch (Exception e) {
-			
+		try {
+			checkTable = Main.validTimetableCheck();
+
+		} catch (Exception e) {
+
 		}
 		try {
-			if (checkTable == true){
-			rowData = Main.solve();
+			if (checkTable == true) {
+				long startTime = System.nanoTime();
+				rowData = Main.solve();
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime);
+				System.out.println("Generation Time: " + duration / 1000000 + " milliseconds");
+
 			}
 		} catch (Exception e) {
 		}
@@ -165,14 +170,71 @@ public class TimeTableCreatorTableView {
 				moduleNameArrayGenerated[p] = new Object[rowData[p].length];
 				for (int j = 0; j < rowData[p].length; j++) {
 
-					//moduleNameArrayGenerated[p][j] = rowData[p][j].value();
+					// moduleNameArrayGenerated[p][j] = rowData[p][j].value();
 					moduleNameArrayGenerated[p][j] = module_codes.get((int) rowData[p][j].value());
 
 				}
 
 			}
-
 			return moduleNameArrayGenerated;
+
+		} catch (Exception e) {
+
+			return null;
+
+		}
+
+	}
+
+	// Method to compare saved names and store matches
+	public Object[][] moduleCodeNameGeneratorInt(String[] importCohortNames, ArrayList<String> importModulesNames)
+			throws IOException {
+		ArrayList<String> module_codes2 = new ArrayList<String>();
+		module_codes2.add("BREAK");
+
+		for (int i = 0; i < importCohortNames.length; i++) {
+
+			for (int a = 0; a < importModulesNames.size(); a++) {
+
+				if (importCohortNames[i].equals(importModulesNames.get(a))) {
+
+					module_codes2.add(importModulesNames.get(a));
+
+				} else {
+
+				}
+			}
+
+		}
+
+		IntVar[][] rowData2 = null;
+		Boolean checkTable = false;
+		try {
+			checkTable = Main.validTimetableCheck();
+
+		} catch (Exception e) {
+
+		}
+		try {
+			if (checkTable == true) {
+				rowData2 = Main.solve();
+
+			}
+		} catch (Exception e) {
+		}
+
+		try {
+			Object[][] moduleNameArrayGeneratedInt = new Object[rowData2.length][];
+			for (int p = 0; p < rowData2.length; p++) {
+				moduleNameArrayGeneratedInt[p] = new Object[rowData2[p].length];
+				for (int j = 0; j < rowData2[p].length; j++) {
+
+					moduleNameArrayGeneratedInt[p][j] = rowData2[p][j].value();
+
+				}
+
+			}
+			return moduleNameArrayGeneratedInt;
 
 		} catch (Exception e) {
 
@@ -205,6 +267,9 @@ public class TimeTableCreatorTableView {
 		JButton backButton = new JButton();
 		JButton printTXTButton = new JButton();
 		JButton exitButton = new JButton();
+		JButton changeButton = new JButton();
+		JButton keepButton = new JButton();
+		JButton reRunButton = new JButton();
 
 		// Creating a new label for the panel
 		JLabel label1 = new JLabel("Generated Table");
@@ -215,12 +280,11 @@ public class TimeTableCreatorTableView {
 		// Creating a string array of the column names
 		String[] columnNames = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00" };
 		Object[][] rowData = { { "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-							   { "0", "0", "0", "0", "0", "0", "0", "0", "0" }, 
-							   { "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-							   { "0", "0", "0", "0", "0", "0", "0", "0", "0" } };
+				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" }, { "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+				{ "0", "0", "0", "0", "0", "0", "0", "0", "0" } };
 
 		Object[][] moduleCodeNameGenerator = moduleCodeNameGenerator(importCohortNames(), importModulesNames());
-		JTable mainTable;
+		
 
 		if (moduleCodeNameGenerator == null) {
 
@@ -238,11 +302,11 @@ public class TimeTableCreatorTableView {
 
 		// Creating a scroll pane to store the table
 		JScrollPane scrollPane = new JScrollPane(mainTable);
-		scrollPane.setPreferredSize(new Dimension(600, 250));
+		scrollPane.setPreferredSize(new Dimension(600, 90));
 		scrollPane.setEnabled(false);
-		mainTable.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+		mainTable.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		
+
 		String[] fileExtensions = { ".txt", ".csv", ".rtf", ".docx", };
 		JComboBox<String> extensionChoice = new JComboBox<String>(fileExtensions);
 
@@ -292,6 +356,42 @@ public class TimeTableCreatorTableView {
 				exitButton.setHorizontalTextPosition(JButton.CENTER);
 				exitButton.setVerticalTextPosition(JButton.CENTER);
 			}
+			{
+				changeButton = new JButton();
+				changeButton.setForeground(Color.BLACK);
+				changeButton.setPreferredSize(new Dimension(100, 35));
+				changeButton.setText("Change");
+				changeButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				changeButton.setHorizontalTextPosition(JButton.CENTER);
+				changeButton.setVerticalTextPosition(JButton.CENTER);
+			}
+			{
+				keepButton = new JButton();
+				keepButton.setForeground(Color.BLACK);
+				keepButton.setPreferredSize(new Dimension(100, 35));
+				keepButton.setText("Keep");
+				keepButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				keepButton.setHorizontalTextPosition(JButton.CENTER);
+				keepButton.setVerticalTextPosition(JButton.CENTER);
+			}
+			{
+				reRunButton = new JButton();
+				reRunButton.setForeground(Color.BLACK);
+				reRunButton.setPreferredSize(new Dimension(100, 35));
+				reRunButton.setText("Re-Run");
+				reRunButton.setFont(new Font("Arial", Font.PLAIN, 12));
+				reRunButton.setHorizontalTextPosition(JButton.CENTER);
+				reRunButton.setVerticalTextPosition(JButton.CENTER);
+			}
+
+			// Creating a new panel
+			JPanel testBox = new JPanel();
+			testBox.setOpaque(false);
+			testBox.setLayout(new FlowLayout());
+			testBox.add(changeButton, gbc);
+			testBox.add(keepButton, gbc);
+			testBox.add(reRunButton, gbc);
+			center.add(testBox, gbc);
 
 			// Creating a new panel
 			JPanel fileBox = new JPanel();
@@ -433,8 +533,7 @@ public class TimeTableCreatorTableView {
 						}
 						builder.append("\n");
 					}
-					
-					
+
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -443,7 +542,8 @@ public class TimeTableCreatorTableView {
 				try {
 
 					writer = new BufferedWriter(new FileWriter(file));
-					//JOptionPane.showMessageDialog(mainPanel, "File Saved!", null, JOptionPane.PLAIN_MESSAGE);
+					// JOptionPane.showMessageDialog(mainPanel, "File Saved!",
+					// null, JOptionPane.PLAIN_MESSAGE);
 
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -462,6 +562,128 @@ public class TimeTableCreatorTableView {
 					e1.printStackTrace();
 				}
 
+			}
+
+		});
+
+		Object[][] timetableReference = moduleCodeNameGeneratorInt(importCohortNames(), importModulesNames());
+		
+		Object selectedModuleObj = 0;
+		int position = 0;
+		
+		mainTable.addMouseListener(new java.awt.event.MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = mainTable.rowAtPoint(evt.getPoint());
+				int col = mainTable.columnAtPoint(evt.getPoint());
+				if (row >= 0 && col >= 0) {
+
+					Object selectedModuleObj = timetableReference[row][col];
+					int position = row * 9 + col;
+					System.out.println("Position: " + position);
+					System.out.println("Module: " + selectedModuleObj);
+
+				}
+
+			}
+		});
+
+		File fileKeepConstraints = new File("src/Files/keepConsraints.txt");
+		File fileChangeConstraints = new File("src/Files/changeConsraints.txt");
+
+		changeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if (!fileChangeConstraints.exists()) {
+					try {
+						fileChangeConstraints.createNewFile();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+
+				BufferedWriter bw = null;
+
+				try {
+					bw = new BufferedWriter(new FileWriter(fileChangeConstraints, true));
+					bw.write(position + "," + selectedModuleObj);
+					bw.newLine();
+					bw.flush();
+					 JOptionPane.showMessageDialog(mainPanel, "Module position will be changed!", null, JOptionPane.PLAIN_MESSAGE);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				} finally {
+					if (bw != null)
+						try {
+							bw.close();
+						} catch (IOException ioe2) {
+						}
+				}
+
+			}
+		});
+
+		keepButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if (!fileKeepConstraints.exists()) {
+					try {
+						fileKeepConstraints.createNewFile();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+
+				BufferedWriter bw = null;
+
+				try {
+					bw = new BufferedWriter(new FileWriter(fileKeepConstraints, true));
+					bw.write(position + "," + selectedModuleObj);
+					bw.newLine();
+					bw.flush();
+					 JOptionPane.showMessageDialog(mainPanel, "Module position will be saved!", null, JOptionPane.PLAIN_MESSAGE);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				} finally {
+					if (bw != null)
+						try {
+							bw.close();
+						} catch (IOException ioe2) {
+						}
+				}
+
+			}
+		});
+
+		reRunButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainTable = null;
+				
+				MainFrame.mainFrame.getContentPane().removeAll();
+				TimeTableCreatorTableView gov = new TimeTableCreatorTableView();
+
+				try {
+					MainFrame.mainFrame.add(gov.buildTimeTableTimetableView(), BorderLayout.CENTER);
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				MainFrame.mainFrame.repaint();
+				MainFrame.mainFrame.revalidate();
+				
+				if (fileKeepConstraints.exists()) {
+					fileKeepConstraints.delete();
+					}
+					
+					if (!fileKeepConstraints.exists()) {
+					fileChangeConstraints.delete();
+					}
 			}
 
 		});

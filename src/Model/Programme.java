@@ -1,5 +1,9 @@
 package Model;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import com.google.ortools.constraintsolver.DecisionBuilder;
@@ -17,6 +21,75 @@ public class Programme {
 
 		module_codes.add("BREAK");
 		timetable_Flatten = solver.makeIntVarArray(Module.N_DAYS * Module.N_HOURS, 0, nModulesInProgramme);
+		
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		
+		File fileKeepConstraints = new File("src/Files/keepConsraints.txt");
+		File fileChangeConstraints = new File("src/Files/changeConsraints.txt");
+
+		if (fileKeepConstraints.exists()) {
+			try {
+				br = new BufferedReader(new FileReader("src/Files/keepConsraints.txt"));
+				while ((line = br.readLine()) != null) {
+
+					String[] keepArray = line.split(cvsSplitBy);
+					solver.addConstraint(solver.makeEquality(timetable_Flatten[Integer.parseInt(keepArray[0])],
+							Integer.parseInt(keepArray[1])));
+					//System.out.println("Keep Constraint Added - programme: " + keepArray[0] + "," + keepArray[1]);
+
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				System.out.println("No File Selected");
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("k");
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						System.out.println("file empty");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		if (fileChangeConstraints.exists()) {
+			try {
+
+				br = new BufferedReader(new FileReader("src/Files/changeConsraints.txt"));
+				while ((line = br.readLine()) != null) {
+
+					String[] changeArray = line.split(cvsSplitBy);
+					solver.addConstraint(solver.makeNonEquality(timetable_Flatten[Integer.parseInt(changeArray[0])],
+							Integer.parseInt(changeArray[1])));
+
+					//System.out.println("Change Constraint Added - programme: " + changeArray[0] + "," + changeArray[1]);
+
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				System.out.println("No File Selected");
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("l");
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						System.out.println("file empty");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 
 		// Adding constraints to add breaks to certain parts of the timetable
 		solver.addConstraint(solver.makeEquality(timetable_Flatten[0], 0));

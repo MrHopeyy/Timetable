@@ -140,46 +140,35 @@ public class Main {
 		Boolean isTotalHoursLegal = false;
 		Boolean isLegal = false;
 		Boolean createTimetableBool = false;
-
 		String csvFile = TimeTableCreatorFileCohortView.CohortPath;
 		String csvFile2 = TimeTableCreatorFileModuleView.ModulePath;
 		Solver solver = new Solver("Timetable");
 		ArrayList<Module> modules = importModules(solver, csvFile2);
 		String[] programme_data = importCohort(csvFile);
-
 		Programme programme = makeProgramme(solver, modules, programme_data);
 		@SuppressWarnings("unused")
 		IntVar[][] timeTable = programme.generateTimetable(solver);
-
+		
 		if (introHours == 0 || totalHours == 0) {
-
 		} else {
-			
 			isLegal = true;
-
 		}
 
 		if (introHours <= 9) {
 			isIntroHoursLegal = true;
 		} else {
-
-			JOptionPane.showMessageDialog(null, "Too many intro hours added! Please remove to fit criteria.", null,
-					JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Too many intro hours added! Please remove to fit criteria.", null, JOptionPane.PLAIN_MESSAGE);
 		}
 
 		if (totalHours <= 36) {
 			isTotalHoursLegal = true;
 		} else {
-
-			JOptionPane.showMessageDialog(null, "Too many total hours added! Please remove to fit criteria.", null,
-					JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Too many total hours added! Please remove to fit criteria.", null, JOptionPane.PLAIN_MESSAGE);
 		}
-
 		if (isIntroHoursLegal == true && isTotalHoursLegal == true && isLegal == true) {
-
 			createTimetableBool = true;
-
 		}
+		
 		return createTimetableBool;
 	}
 

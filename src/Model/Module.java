@@ -32,7 +32,7 @@ public class Module {
 		// Constraint to constrain the total hours of a module to the timetable
 		solver.addConstraint(solver.makeSumEquality(timetable_Flatten, totalHours));
 
-		// Constraint to constrain the introduction hours of a module to the
+		// Constraint to constrain the introduction hours of a module to the timetable
 		solver.addConstraint(solver.makeSumEquality(timetable[0], introHours));
 
 	}

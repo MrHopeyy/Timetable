@@ -68,7 +68,7 @@ public class TimeTableCreatorFileCohortCreationView {
 
 		// Creating a jTexArea for showing the file contents
 		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
+		//textArea.setEditable(false);
 
 		// Creating a jTexArea for making a module code
 		JTextArea textAreaModuleCode = new JTextArea();
@@ -177,7 +177,7 @@ public class TimeTableCreatorFileCohortCreationView {
 			fileBox.setLayout(new FlowLayout());
 			fileBox.add(moduleCodeBox, gbc);
 			fileBox.add(addButton, gbc);
-			fileBox.add(addNewLineButton, gbc);
+			//fileBox.add(addNewLineButton, gbc);
 			center.add(fileBox, gbc);
 
 			// Creating a new panel
@@ -260,9 +260,15 @@ public class TimeTableCreatorFileCohortCreationView {
 
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String moduleCodeRead = textAreaModuleCode.getText();
+				System.out.println("here: " + moduleCodeRead);
+				if( moduleCodeRead.equals("") || moduleCodeRead.equals(" ") || moduleCodeRead.equals(null)){
+					moduleCodeRead = "AA1234";
+					textArea.append(moduleCodeRead + ",");
+				}else{
+				textArea.append(moduleCodeRead + ",");
 
-				textArea.append(textAreaModuleCode.getText() + ",");
-
+				}
 			}
 		});
 

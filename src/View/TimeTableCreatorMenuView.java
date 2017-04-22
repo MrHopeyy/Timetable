@@ -240,9 +240,11 @@ public class TimeTableCreatorMenuView {
 						File f = new File("src/Files/output.txt");
 						@SuppressWarnings("unused")
 						boolean deleted = f.delete();
+						
 					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(null, "Something Went Wrong!", " ", JOptionPane.ERROR_MESSAGE);
 					}
+					
 					System.exit(0);
 				}
 			}
